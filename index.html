@@ -6,159 +6,255 @@
 <title>Trippie — Clickable Wireframe Prototype v1.1</title>
 <style>
   :root{
-    --ink:#2b2b2b; --line:#9a9a9a; --line-lt:#cfcfcf; --bg:#ececec;
-    --fill:#f7f7f7; --fill-dk:#e2e2e2; --accent:#444;
+    --ink:#16202e; --muted:#69788c; --line:#e2e7ef; --line-lt:#eef1f6; --bg:#e9edf3;
+    --fill:#f5f7fa; --fill-dk:#eef1f6;
+    --accent:#0fa594; --accent-dk:#0b8174; --accent-lt:#e4f6f3;
+    --coral:#ff6b5e; --gold:#f4a52a; --green:#1f9d57; --green-dk:#1c6b2e;
+    --radius:16px; --shadow:0 2px 12px rgba(20,34,55,.07); --shadow-md:0 8px 24px rgba(20,34,55,.12);
   }
-  *{box-sizing:border-box; margin:0; padding:0; font-family:"Segoe UI",-apple-system,Helvetica,Arial,sans-serif;}
-  body{background:var(--bg); color:var(--ink); display:flex; min-height:100vh;}
+  *{box-sizing:border-box; margin:0; padding:0; font-family:"Inter","Segoe UI",-apple-system,Helvetica,Arial,sans-serif;}
+  body{background:var(--bg); color:var(--ink); display:flex; min-height:100vh; -webkit-font-smoothing:antialiased;}
+  svg.ic{width:1em; height:1em; display:inline-block; vertical-align:-.13em; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0;}
 
   /* ===== Sidebar (screen index) ===== */
-  aside{width:250px; background:#fff; border-right:2px solid var(--line-lt); padding:18px 14px; flex-shrink:0; height:100vh; overflow-y:auto; position:sticky; top:0;}
-  aside h1{font-size:18px; letter-spacing:1px;}
-  aside .sub{font-size:11px; color:#777; margin:4px 0 14px;}
-  aside h2{font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:#888; margin:14px 0 5px;}
-  aside button{display:block; width:100%; text-align:left; background:none; border:1px solid transparent; padding:6px 8px; font-size:13px; cursor:pointer; border-radius:4px; color:var(--ink);}
+  aside{width:250px; background:#fff; border-right:1px solid var(--line); padding:18px 14px; flex-shrink:0; height:100vh; overflow-y:auto; position:sticky; top:0;}
+  aside h1{font-size:18px; letter-spacing:.5px; color:var(--accent-dk); display:flex; align-items:center; gap:7px;}
+  aside .sub{font-size:11px; color:var(--muted); margin:4px 0 14px;}
+  aside h2{font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:#9aa6b5; margin:14px 0 5px;}
+  aside button{display:flex; align-items:center; gap:9px; width:100%; text-align:left; background:none; border:1px solid transparent; padding:7px 9px; font-size:13px; cursor:pointer; border-radius:9px; color:var(--ink);}
+  aside button .ic{color:var(--muted); font-size:15px;}
   aside button:hover{background:var(--fill-dk);}
-  aside button.active{background:var(--ink); color:#fff;}
-  .annot-toggle{margin-top:16px; border:1px dashed var(--line) !important; font-size:12px !important; text-align:center !important;}
+  aside button.active{background:var(--accent); color:#fff;}
+  aside button.active .ic{color:#fff;}
+  .annot-toggle{margin-top:16px; border:1px dashed var(--line) !important; color:var(--muted) !important; font-size:12px !important; justify-content:center;}
 
   /* ===== Stage / phone ===== */
   main{flex:1; display:flex; flex-direction:column; align-items:center; padding:24px 16px;}
-  .stage-title{font-size:13px; color:#666; margin-bottom:10px; text-align:center;}
-  .phone{width:375px; height:760px; background:#fff; border:3px solid var(--ink); border-radius:36px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 12px 30px rgba(0,0,0,.15); position:relative;}
-  .notch{height:24px; flex-shrink:0; display:flex; justify-content:center; align-items:center; border-bottom:1px solid var(--line-lt); font-size:9px; color:#999; letter-spacing:2px;}
-  .viewport{flex:1; overflow-y:auto; position:relative;}
-  .hint{font-size:11px; color:#888; margin-top:12px; max-width:380px; text-align:center; line-height:1.5;}
+  .stage-title{font-size:13px; color:var(--muted); margin-bottom:10px; text-align:center;}
+  .phone{width:375px; height:760px; background:#fff; border:9px solid #11161d; border-radius:42px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 18px 44px rgba(15,25,45,.22); position:relative;}
+  .notch{height:26px; flex-shrink:0; display:flex; justify-content:center; align-items:center; background:#fff; font-size:10px; color:#aeb6c2; letter-spacing:2px; position:relative; z-index:8;}
+  .notch::after{content:""; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:96px; height:15px; background:#11161d; border-radius:0 0 12px 12px;}
+  .viewport{flex:1; overflow-y:auto; position:relative; background:var(--bg);}
+  .hint{font-size:11px; color:var(--muted); margin-top:12px; max-width:380px; text-align:center; line-height:1.5;}
 
   /* ===== Screens ===== */
-  .screen{display:none; min-height:100%; flex-direction:column;}
+  .screen{display:none; min-height:100%; flex-direction:column; background:var(--bg);}
   .screen.on{display:flex;}
 
-  .topbar{display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:2px solid var(--ink); background:#fff; position:sticky; top:0; z-index:5;}
-  .topbar .back{width:30px; height:30px; border:1.5px solid var(--ink); border-radius:6px; background:#fff; cursor:pointer; font-size:14px; flex-shrink:0;}
-  .topbar h3{font-size:15px; flex:1;}
-  .topbar .mini{font-size:10px; border:1px solid var(--line); border-radius:10px; padding:2px 8px; color:#666; white-space:nowrap;}
+  .topbar{display:flex; align-items:center; gap:10px; padding:13px 15px; background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5;}
+  .topbar .back{width:34px; height:34px; border:1px solid var(--line); border-radius:10px; background:#fff; cursor:pointer; font-size:15px; flex-shrink:0; color:var(--ink); display:flex; align-items:center; justify-content:center;}
+  .topbar .back:hover{background:var(--fill-dk);}
+  .topbar h3{font-size:16px; flex:1; font-weight:700;}
+  .topbar .mini{font-size:10px; background:var(--accent-lt); color:var(--accent-dk); font-weight:700; border-radius:20px; padding:3px 9px; white-space:nowrap;}
+  .topbar .ico{width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--ink); cursor:pointer; font-size:17px;}
+  .topbar .ico:hover{background:var(--fill-dk);}
 
-  .body{padding:14px; display:flex; flex-direction:column; gap:12px; flex:1;}
+  .body{padding:15px; display:flex; flex-direction:column; gap:13px; flex:1;}
 
-  /* lo-fi primitives */
-  .box{border:1.5px solid var(--line); border-radius:8px; background:#fff; padding:12px;}
-  .img{background:var(--fill-dk); border:1.5px solid var(--line); border-radius:6px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; color:#888; font-size:10px; letter-spacing:1px;}
-  .img::before{content:""; position:absolute; inset:0;
-    background:linear-gradient(to top right, transparent calc(50% - 1px), var(--line) calc(50% - .5px), var(--line) calc(50% + .5px), transparent calc(50% + 1px)),
-               linear-gradient(to bottom right, transparent calc(50% - 1px), var(--line) calc(50% - .5px), var(--line) calc(50% + .5px), transparent calc(50% + 1px));}
-  .img span{position:relative; background:var(--fill-dk); padding:1px 6px; z-index:1;}
-  .btn{display:block; width:100%; padding:12px; border:2px solid var(--ink); background:var(--ink); color:#fff; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; text-align:center;}
-  .btn.ghost{background:#fff; color:var(--ink);}
-  .btn.sm{padding:7px 10px; font-size:12px; width:auto; display:inline-block;}
-  .input{border:1.5px solid var(--line); border-radius:8px; padding:11px; font-size:13px; color:#999; background:var(--fill);}
+  /* primitives */
+  .box{border:1px solid var(--line); border-radius:var(--radius); background:#fff; padding:14px; box-shadow:var(--shadow);}
+  .img{background:linear-gradient(135deg,#dbe3ec,#c7d2dd); border-radius:12px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; color:#8593a3; font-size:10px; letter-spacing:1px; background-size:cover; background-position:center;}
+  .img span{position:relative; z-index:1; opacity:.8;}
+  .btn{display:flex; align-items:center; justify-content:center; gap:7px; width:100%; padding:13px; border:none; background:var(--accent); color:#fff; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; text-align:center; box-shadow:0 4px 12px rgba(15,165,148,.28);}
+  .btn:hover{background:var(--accent-dk);}
+  .btn.ghost{background:#fff; color:var(--ink); border:1px solid var(--line); box-shadow:none;}
+  .btn.ghost:hover{background:var(--fill-dk);}
+  .btn.sm{padding:8px 13px; font-size:12px; width:auto; display:inline-flex; border-radius:10px;}
+  .input{border:1px solid var(--line); border-radius:11px; padding:12px; font-size:13px; color:var(--muted); background:var(--fill);}
   .row{display:flex; gap:8px; align-items:center;}
   .row .grow{flex:1;}
-  .chips{display:flex; flex-wrap:wrap; gap:6px;}
-  .chip{border:1.5px solid var(--line); border-radius:16px; padding:5px 12px; font-size:12px; cursor:pointer; background:#fff; user-select:none;}
-  .chip.sel{background:var(--ink); color:#fff; border-color:var(--ink);}
-  .label{font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#777; font-weight:700;}
-  .meta{font-size:11px; color:#888;}
-  .avatar{width:34px; height:34px; border-radius:50%; border:1.5px solid var(--line); background:var(--fill-dk); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#666; flex-shrink:0;}
-  .divider{border-top:1px dashed var(--line-lt);}
-  .badge{font-size:10px; border:1px solid var(--ink); border-radius:4px; padding:1px 6px; font-weight:700;}
-  .badge.lt{border-color:var(--line); color:#777; font-weight:400;}
-  .alert{border:1.5px dashed var(--ink); background:var(--fill); border-radius:8px; padding:10px; font-size:12px;}
-  .progress{height:8px; border:1px solid var(--line); border-radius:5px; background:#fff; overflow:hidden;}
-  .progress i{display:block; height:100%; background:var(--ink);}
+  .chips{display:flex; flex-wrap:wrap; gap:7px;}
+  .chip{border:1px solid var(--line); border-radius:20px; padding:6px 13px; font-size:12px; cursor:pointer; background:#fff; user-select:none; color:#4a5868; font-weight:500; display:inline-flex; align-items:center; gap:5px;}
+  .chip:hover{border-color:var(--accent);}
+  .chip.sel{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .label{font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); font-weight:700;}
+  .meta{font-size:11px; color:var(--muted);}
+  .avatar{width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-dk)); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; flex-shrink:0; background-size:cover; background-position:center;}
+  .divider{border-top:1px solid var(--line-lt);}
+  .badge{font-size:10px; background:var(--accent-lt); color:var(--accent-dk); border-radius:6px; padding:2px 7px; font-weight:700;}
+  .badge.lt{background:var(--fill-dk); color:var(--muted); font-weight:600;}
+  .alert{border:1px solid var(--line); background:var(--accent-lt); border-radius:12px; padding:11px; font-size:12px; color:#2c4a46; display:flex; gap:8px; align-items:flex-start;}
+  .progress{height:8px; border-radius:6px; background:var(--fill-dk); overflow:hidden;}
+  .progress i{display:block; height:100%; background:var(--accent); border-radius:6px;}
   .bar-row{display:flex; align-items:center; gap:8px; font-size:11px;}
-  .bar-row .bar{flex:1; height:14px; border:1px solid var(--line); background:#fff; border-radius:3px; overflow:hidden;}
-  .bar-row .bar i{display:block; height:100%; background:#bdbdbd;}
-  .bar-row.win .bar i{background:var(--ink);}
-  .bar-row.win{font-weight:700;}
-  .tabs{display:flex; border-bottom:2px solid var(--ink); overflow-x:auto;}
-  .tabs button{flex:1; padding:9px 6px; background:none; border:none; font-size:11px; cursor:pointer; color:#777; border-bottom:3px solid transparent; white-space:nowrap;}
-  .tabs button.on{color:var(--ink); font-weight:700; border-bottom-color:var(--ink);}
-  .fab{position:absolute; bottom:18px; right:16px; width:54px; height:54px; border-radius:50%; background:var(--ink); color:#fff; border:none; font-size:24px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.25); z-index:6;}
-  .stars{letter-spacing:2px; font-size:11px;}
+  .bar-row .bar{flex:1; height:16px; background:var(--fill-dk); border-radius:8px; overflow:hidden;}
+  .bar-row .bar i{display:block; height:100%; background:#c2ccd6; border-radius:8px;}
+  .bar-row.win .bar i{background:var(--accent);}
+  .bar-row.win{font-weight:700; color:var(--accent-dk);}
+  .tabs{display:flex; background:#fff; border-bottom:1px solid var(--line); overflow-x:auto;}
+  .tabs button{flex:1; padding:11px 6px; background:none; border:none; font-size:11px; cursor:pointer; color:var(--muted); border-bottom:2.5px solid transparent; white-space:nowrap; display:flex; flex-direction:column; align-items:center; gap:3px; font-weight:600;}
+  .tabs button .ic{font-size:16px;}
+  .tabs button.on{color:var(--accent); border-bottom-color:var(--accent);}
+  .fab{position:absolute; bottom:20px; right:18px; width:56px; height:56px; border-radius:50%; background:var(--accent); color:#fff; border:none; font-size:24px; cursor:pointer; box-shadow:0 8px 20px rgba(15,165,148,.45); z-index:6; display:flex; align-items:center; justify-content:center;}
+  .fab:hover{background:var(--accent-dk);}
+  .fab .ic{font-size:26px;}
+  .stars{letter-spacing:1px; font-size:11px; color:var(--gold);}
 
-  /* ===== hi-fi photo system (Discovery + Destination) ===== */
-  .photo{position:relative; border-radius:10px; overflow:hidden; background-size:cover; background-position:center; background-color:#c2ccd4;}
-  .photo.hero{height:188px;}
-  .photo .scrim{position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.66) 0%, rgba(0,0,0,.06) 52%, rgba(0,0,0,.18) 100%);}
-  .photo .cap{position:absolute; left:13px; right:13px; bottom:10px; color:#fff; z-index:2; text-shadow:0 1px 5px rgba(0,0,0,.55);}
-  .photo .cap .nm{font-size:21px; font-weight:800; letter-spacing:.3px;}
-  .photo .cap .sub{font-size:11px; opacity:.93;}
-  .score{background:rgba(255,255,255,.94); color:#1c6b2e; font-weight:800; font-size:11px; border-radius:13px; padding:3px 9px; white-space:nowrap;}
-  .photo .score{position:absolute; top:10px; right:10px; z-index:2;}
-  .dcard{border:1.5px solid var(--line-lt); border-radius:12px; overflow:hidden; background:#fff; cursor:pointer; box-shadow:0 2px 7px rgba(0,0,0,.07); transition:transform .12s, box-shadow .12s;}
-  .dcard:hover{transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,.13);}
-  .dcard .thumb{height:118px; background-size:cover; background-position:center; background-color:#c2ccd4; position:relative;}
-  .dcard .thumb .score{position:absolute; top:8px; right:8px;}
-  .dcard .info{padding:9px 11px 11px;}
-  .dcard .info .nm{font-size:14px; font-weight:700;}
-  .facts{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px;}
-  .pill{font-size:10px; background:var(--fill-dk); border-radius:10px; padding:3px 8px; color:#555; white-space:nowrap;}
+  /* ===== hi-fi photo system ===== */
+  .photo{position:relative; border-radius:14px; overflow:hidden; background-size:cover; background-position:center; background-color:#c2ccd4;}
+  .photo.hero{height:190px;}
+  .photo .scrim{position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.68) 0%, rgba(0,0,0,.04) 54%, rgba(0,0,0,.2) 100%);}
+  .photo .cap{position:absolute; left:14px; right:14px; bottom:11px; color:#fff; z-index:2; text-shadow:0 1px 6px rgba(0,0,0,.55);}
+  .photo .cap .nm{font-size:22px; font-weight:800; letter-spacing:.3px;}
+  .photo .cap .sub{font-size:11px; opacity:.95; display:flex; align-items:center; gap:4px;}
+  .score{background:rgba(255,255,255,.95); color:var(--green-dk); font-weight:800; font-size:11px; border-radius:14px; padding:4px 10px; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;}
+  .photo .score{position:absolute; top:11px; right:11px; z-index:2;}
+  .dcard{border:1px solid var(--line); border-radius:15px; overflow:hidden; background:#fff; cursor:pointer; box-shadow:var(--shadow); transition:transform .12s, box-shadow .12s;}
+  .dcard:hover{transform:translateY(-2px); box-shadow:var(--shadow-md);}
+  .dcard .thumb{height:120px; background-size:cover; background-position:center; background-color:#c2ccd4; position:relative;}
+  .dcard .thumb .score{position:absolute; top:9px; right:9px;}
+  .dcard .info{padding:10px 12px 12px;}
+  .dcard .info .nm{font-size:14px; font-weight:700; display:flex; align-items:center; gap:5px;}
+  .facts{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .pill{font-size:10px; background:var(--fill-dk); border-radius:12px; padding:4px 9px; color:#566373; white-space:nowrap; display:inline-flex; align-items:center; gap:4px; font-weight:500;}
   .fade-in{animation:fade .35s ease;}
   @keyframes fade{from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:none;}}
 
   /* annotation tags */
-  .req{display:none; font-size:9px; background:#fff; border:1px solid #b08c00; color:#7a6200; border-radius:3px; padding:0 4px; vertical-align:middle; margin-left:4px; white-space:nowrap;}
+  .req{display:none; font-size:9px; background:#fff; border:1px solid #d2a400; color:#8a6d00; border-radius:4px; padding:0 4px; vertical-align:middle; margin-left:4px; white-space:nowrap;}
   body.annot .req{display:inline-block;}
 
-  /* map placeholder */
-  .map{position:relative; background:var(--fill); border:1.5px solid var(--line); border-radius:8px; overflow:hidden;}
-  .map .grid{position:absolute; inset:0; background-image:linear-gradient(var(--line-lt) 1px, transparent 1px), linear-gradient(90deg, var(--line-lt) 1px, transparent 1px); background-size:34px 34px; opacity:.6;}
-  .map .road{position:absolute; border-top:2.5px dashed var(--line); width:140%; left:-20%;}
+  /* map */
+  .map{position:relative; background:#dce8df; border-radius:12px; overflow:hidden;}
+  .map .grid{position:absolute; inset:0; background-image:linear-gradient(rgba(120,150,130,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(120,150,130,.18) 1px, transparent 1px); background-size:30px 30px;}
+  .map .road{position:absolute; border-top:4px solid rgba(255,255,255,.85); width:140%; left:-20%;}
   .pin{position:absolute; transform:translate(-50%,-100%); text-align:center; cursor:pointer; z-index:2;}
-  .pin .dot{width:26px; height:26px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:#fff; border:2px solid var(--ink); margin:0 auto; display:flex; align-items:center; justify-content:center;}
-  .pin .dot b{transform:rotate(45deg); font-size:8px;}
-  .pin .tag{font-size:9px; background:#fff; border:1px solid var(--line); border-radius:3px; padding:0 4px; margin-top:2px; white-space:nowrap;}
-  .pin.me .dot{background:var(--ink);} .pin.me .dot b{color:#fff;}
+  .pin .dot{width:28px; height:28px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--coral); border:2.5px solid #fff; margin:0 auto; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 7px rgba(0,0,0,.28);}
+  .pin .dot b{transform:rotate(45deg); font-size:9px; color:#fff; line-height:1;}
+  .pin .dot .ic{transform:rotate(45deg); font-size:13px; color:#fff;}
+  .pin .tag{font-size:9px; background:#fff; border-radius:5px; padding:1px 6px; margin-top:3px; white-space:nowrap; font-weight:700; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.18);}
+  .pin.me .dot{background:var(--accent);}
 
-  .sheet{border:2px solid var(--ink); border-bottom:none; border-radius:14px 14px 0 0; background:#fff; padding:10px 14px 14px; margin-top:auto; position:sticky; bottom:0; z-index:5;}
-  .sheet .handle{width:38px; height:4px; background:var(--line); border-radius:3px; margin:0 auto 10px;}
+  .sheet{border-radius:20px 20px 0 0; background:#fff; padding:12px 16px 16px; margin-top:auto; position:sticky; bottom:0; z-index:5; box-shadow:0 -6px 20px rgba(20,34,55,.1);}
+  .sheet .handle{width:40px; height:4px; background:var(--line); border-radius:3px; margin:0 auto 12px;}
 
-  .check{width:20px; height:20px; border:1.5px solid var(--ink); border-radius:4px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; cursor:pointer; flex-shrink:0; background:#fff;}
-  .check.done{background:var(--ink); color:#fff;}
+  .check{width:22px; height:22px; border:2px solid var(--line); border-radius:7px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; cursor:pointer; flex-shrink:0; background:#fff; color:#fff;}
+  .check.done{background:var(--accent); border-color:var(--accent);}
 
-  .ptt{width:74px; height:74px; border-radius:50%; border:3px solid var(--ink); background:#fff; font-size:10px; font-weight:800; cursor:pointer; letter-spacing:1px; box-shadow:0 4px 10px rgba(0,0,0,.25);}
-  .ptt:active{background:var(--ink); color:#fff;}
+  .ptt{width:78px; height:78px; border-radius:50%; border:none; background:var(--coral); color:#fff; font-size:10px; font-weight:800; cursor:pointer; letter-spacing:1px; box-shadow:0 8px 20px rgba(255,107,94,.45); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;}
+  .ptt .ic{font-size:22px;}
+  .ptt:active{background:#e8584b;}
 
-  .toast{position:absolute; left:50%; transform:translateX(-50%); bottom:90px; background:var(--ink); color:#fff; font-size:11px; padding:7px 14px; border-radius:16px; opacity:0; transition:opacity .25s; pointer-events:none; z-index:50; white-space:nowrap;}
+  .toast{position:absolute; left:50%; transform:translateX(-50%); bottom:90px; background:var(--ink); color:#fff; font-size:11px; padding:9px 16px; border-radius:20px; opacity:0; transition:opacity .25s; pointer-events:none; z-index:50; white-space:nowrap; box-shadow:0 6px 18px rgba(0,0,0,.3);}
   .toast.show{opacity:1;}
+
+  /* nav bar (bottom) */
+  .navbar{display:flex; background:#fff; border-top:1px solid var(--line); padding:7px 4px 9px; position:sticky; bottom:0; z-index:5;}
+  .navbar button{flex:1; background:none; border:none; cursor:pointer; color:var(--muted); font-size:9px; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:3px;}
+  .navbar button .ic{font-size:20px;}
+  .navbar button.on{color:var(--accent);}
+
+  /* list rows */
+  .lrow{display:flex; align-items:center; gap:11px; padding:11px 0;}
+  .lrow .licon{width:40px; height:40px; border-radius:11px; background:var(--accent-lt); color:var(--accent-dk); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;}
+  .lrow .licon.coral{background:#ffeae7; color:var(--coral);}
+  .lrow .licon.gold{background:#fdf0db; color:#c47f11;}
+  .lrow .grow{min-width:0;}
+  .hl{color:var(--accent-dk); font-weight:700;}
 </style>
 </head>
 <body>
 
+<!-- ===== inline icon sprite (Lucide-style, self-contained) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15"/><path d="M15 6v15"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M8 11h8"/><path d="M8 16h6"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></symbol>
+  <symbol id="i-id" viewBox="0 0 24 24"><rect width="18" height="14" x="3" y="5" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M15 9h3"/><path d="M15 13h2"/><path d="M7 16h7"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></symbol>
+  <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol>
+  <symbol id="i-navigation" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></symbol>
+  <symbol id="i-fuel" viewBox="0 0 24 24"><line x1="3" x2="15" y1="22" y2="22"/><line x1="4" x2="14" y1="9" y2="9"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/></symbol>
+  <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></symbol>
+  <symbol id="i-waves" viewBox="0 0 24 24"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></symbol>
+  <symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+  <symbol id="i-landmark" viewBox="0 0 24 24"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-thermometer" viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></symbol>
+  <symbol id="i-corner-up-left" viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/><line x1="18" x2="22" y1="16" y2="16"/></symbol>
+  <symbol id="i-bar-chart" viewBox="0 0 24 24"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></symbol>
+  <symbol id="i-vote" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><path d="M5 7c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2v12H5V7Z"/><path d="M22 19H2"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol>
+  <symbol id="i-google" viewBox="0 0 48 48">
+    <path fill="#4285F4" stroke="none" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+    <path fill="#34A853" stroke="none" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+    <path fill="#FBBC05" stroke="none" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/>
+    <path fill="#EA4335" stroke="none" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+  </symbol>
+</svg>
+
 <aside>
-  <h1>TRIPPIE</h1>
-  <div class="sub">Clickable lo-fi wireframe · PRD v1.1 · All 7 modules</div>
+  <h1><svg class="ic" style="font-size:20px;color:var(--accent)"><use href="#i-compass"/></svg>TRIPPIE</h1>
+  <div class="sub">Clickable hi-fi prototype · PRD v1.1 · All 7 modules</div>
 
   <h2>Onboarding & Social — Module 1</h2>
-  <button data-nav="login">1 · Login / Register</button>
-  <button data-nav="profile">2 · Profile Setup</button>
-  <button data-nav="friends">3 · Friends & Requests</button>
+  <button data-nav="login"><svg class="ic"><use href="#i-user"/></svg>1 · Login / Register</button>
+  <button data-nav="profile"><svg class="ic"><use href="#i-id"/></svg>2 · Profile Setup</button>
+  <button data-nav="friends"><svg class="ic"><use href="#i-users"/></svg>3 · Friends & Requests</button>
 
   <h2>Trips</h2>
-  <button data-nav="home">4 · Home / Trip Dashboard</button>
-  <button data-nav="create">5 · Create Trip Group</button>
-  <button data-nav="overview">6 · Trip Overview Hub</button>
+  <button data-nav="home"><svg class="ic"><use href="#i-home"/></svg>4 · Home / Trip Dashboard</button>
+  <button data-nav="create"><svg class="ic"><use href="#i-plus"/></svg>5 · Create Trip Group</button>
+  <button data-nav="overview"><svg class="ic"><use href="#i-map"/></svg>6 · Trip Overview Hub</button>
 
   <h2>Survey — Module 2</h2>
-  <button data-nav="survey">7 · Preference Survey</button>
-  <button data-nav="results">8 · Survey Results</button>
+  <button data-nav="survey"><svg class="ic"><use href="#i-sliders"/></svg>7 · Preference Survey</button>
+  <button data-nav="results"><svg class="ic"><use href="#i-bar-chart"/></svg>8 · Survey Results</button>
 
   <h2>Discovery — Module 3</h2>
-  <button data-nav="discover">9 · Destination Map</button>
-  <button data-nav="destination">10 · Destination Card</button>
+  <button data-nav="discover"><svg class="ic"><use href="#i-pin"/></svg>9 · Destination Map</button>
+  <button data-nav="destination"><svg class="ic"><use href="#i-image"/></svg>10 · Destination Card</button>
 
   <h2>Repository — Module 4</h2>
-  <button data-nav="repo">11 · Trip Repository</button>
+  <button data-nav="repo"><svg class="ic"><use href="#i-folder"/></svg>11 · Trip Repository</button>
 
   <h2>Itinerary — Module 5</h2>
-  <button data-nav="itinerary">12 · Itinerary Day View</button>
+  <button data-nav="itinerary"><svg class="ic"><use href="#i-list"/></svg>12 · Itinerary Day View</button>
 
   <h2>Live Mode — Module 6</h2>
-  <button data-nav="livemap">13 · Road Trip Live Map</button>
+  <button data-nav="livemap"><svg class="ic"><use href="#i-radio"/></svg>13 · Road Trip Live Map</button>
 
   <h2>Expenses — Module 7</h2>
-  <button data-nav="expenses">14 · Expense Tracker</button>
+  <button data-nav="expenses"><svg class="ic"><use href="#i-wallet"/></svg>14 · Expense Tracker</button>
 
   <button class="annot-toggle" onclick="document.body.classList.toggle('annot')">Toggle PRD requirement tags</button>
 </aside>
@@ -171,27 +267,35 @@
 
     <!-- ============ 1. LOGIN ============ -->
     <section class="screen" id="login">
-      <div class="body" style="justify-content:center; gap:16px;">
-        <div style="text-align:center;">
-          <div class="img" style="width:84px;height:84px;margin:0 auto;border-radius:20px;"><span>LOGO</span></div>
-          <h2 style="margin-top:12px;">Trippie</h2>
-          <div class="meta">Plan group trips together — from first poll to last km</div>
+      <div class="photo" id="loginHero" style="height:300px; border-radius:0;">
+        <div class="scrim" style="background:linear-gradient(to top, rgba(11,30,30,.92) 8%, rgba(11,30,30,.25) 55%, rgba(11,30,30,.45) 100%);"></div>
+        <div class="cap" style="bottom:18px;">
+          <div style="display:flex; align-items:center; gap:9px;">
+            <div style="width:46px;height:46px;border-radius:14px;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(15,165,148,.5);"><svg class="ic" style="font-size:26px;color:#fff"><use href="#i-compass"/></svg></div>
+            <div class="nm" style="font-size:30px;">Trippie</div>
+          </div>
+          <div class="sub" style="font-size:13px; margin-top:7px;">Plan group trips together — from first poll to last km</div>
         </div>
+      </div>
+      <div class="body" style="gap:14px;">
         <div class="label">Mobile number <span class="req">S-01</span></div>
-        <div class="input">+91 | 98XXX XXXXX</div>
-        <button class="btn" data-go="profile">Send OTP →</button>
+        <div class="input"><svg class="ic" style="margin-right:6px;color:var(--muted)"><use href="#i-phone"/></svg>+91 | 98XXX XXXXX</div>
+        <button class="btn" data-go="profile">Send OTP <svg class="ic"><use href="#i-arrow-right"/></svg></button>
         <div style="text-align:center;" class="meta">— or —</div>
-        <button class="btn ghost" data-go="profile">[G] Continue with Google <span class="req">S-01</span></button>
+        <button class="btn ghost" data-go="profile"><svg viewBox="0 0 48 48" style="width:17px;height:17px;"><use href="#i-google"/></svg> Continue with Google <span class="req">S-01</span></button>
         <div class="meta" style="text-align:center;">Phone-first sign-in for India · OTP via SMS</div>
       </div>
     </section>
 
     <!-- ============ 2. PROFILE ============ -->
     <section class="screen" id="profile">
-      <div class="topbar"><button class="back" data-go="login">←</button><h3>Set up your profile</h3><span class="mini">1 of 1</span></div>
+      <div class="topbar"><button class="back" data-go="login"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Set up your profile</h3><span class="mini">1 of 1</span></div>
       <div class="body">
         <div class="row">
-          <div class="img" style="width:64px;height:64px;border-radius:50%;"><span>PHOTO</span></div>
+          <div style="position:relative;flex-shrink:0;">
+            <div class="avatar" style="width:64px;height:64px;font-size:22px;">S</div>
+            <div style="position:absolute;bottom:-2px;right:-2px;width:24px;height:24px;border-radius:50%;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--accent-dk);box-shadow:var(--shadow);"><svg class="ic" style="font-size:13px"><use href="#i-camera"/></svg></div>
+          </div>
           <div class="grow">
             <div class="input" style="margin-bottom:6px;">Display name <span class="req">S-02</span></div>
             <div class="input">Home city (e.g. Bengaluru)</div>
@@ -199,7 +303,7 @@
         </div>
         <div class="label">Travel interests <span class="req">S-02</span> <span class="meta" style="text-transform:none;font-weight:400;">(feeds destination matching)</span></div>
         <div class="chips" data-multi>
-          <span class="chip sel">Beach</span><span class="chip sel">Mountains</span><span class="chip">Culture</span><span class="chip">Adventure</span><span class="chip">Food</span>
+          <span class="chip sel"><svg class="ic"><use href="#i-waves"/></svg>Beach</span><span class="chip sel"><svg class="ic"><use href="#i-mountain"/></svg>Mountains</span><span class="chip"><svg class="ic"><use href="#i-landmark"/></svg>Culture</span><span class="chip"><svg class="ic"><use href="#i-compass"/></svg>Adventure</span><span class="chip"><svg class="ic"><use href="#i-utensils"/></svg>Food</span>
         </div>
         <div class="label">Preferred travel style</div>
         <div class="chips" data-single>
@@ -212,96 +316,106 @@
             <button class="btn sm ghost" data-toast="Contacts imported — 14 friends found">Import</button>
           </div>
         </div>
-        <button class="btn" data-go="friends">Save & Continue →</button>
+        <button class="btn" data-go="friends">Save & Continue <svg class="ic"><use href="#i-arrow-right"/></svg></button>
       </div>
     </section>
 
     <!-- ============ 3. FRIENDS ============ -->
     <section class="screen" id="friends">
-      <div class="topbar"><button class="back" data-go="profile">←</button><h3>Friends</h3><span class="mini">Module 1</span></div>
+      <div class="topbar"><button class="back" data-go="profile"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Friends</h3><span class="mini">Module 1</span></div>
       <div class="body">
-        <div class="input">🔍 Search by name or username… <span class="req">S-04</span></div>
+        <div class="input"><svg class="ic" style="margin-right:6px;color:var(--muted)"><use href="#i-search"/></svg>Search by name or username… <span class="req">S-04</span></div>
         <div class="label">Follow requests (2) <span class="req">S-05 / S-06</span></div>
         <div class="box row">
-          <div class="avatar">RK</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#f4a52a,#e07b11)">RK</div>
           <div class="grow"><b style="font-size:13px;">Rahul K.</b><div class="meta">Wants to connect · mutual: 3 friends</div></div>
-          <button class="btn sm" data-toast="Request accepted — you are now connected (mutual)">Accept</button>
-          <button class="btn sm ghost" data-toast="Request declined">✕</button>
+          <button class="btn sm" data-toast="Request accepted — you are now connected (mutual)"><svg class="ic"><use href="#i-check"/></svg></button>
+          <button class="btn sm ghost" data-toast="Request declined"><svg class="ic"><use href="#i-x"/></svg></button>
         </div>
         <div class="box row">
-          <div class="avatar">SM</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#ff6b5e,#e8584b)">SM</div>
           <div class="grow"><b style="font-size:13px;">Sneha M.</b><div class="meta">Pending — no profile access until accepted <span class="req">S-06</span></div></div>
-          <button class="btn sm" data-toast="Request accepted">Accept</button>
-          <button class="btn sm ghost" data-toast="Request declined">✕</button>
+          <button class="btn sm" data-toast="Request accepted"><svg class="ic"><use href="#i-check"/></svg></button>
+          <button class="btn sm ghost" data-toast="Request declined"><svg class="ic"><use href="#i-x"/></svg></button>
         </div>
         <div class="row" style="justify-content:space-between;">
           <span class="label">My friends (14) <span class="req">S-09</span></span>
           <span class="meta">Sort: Recent ▾ | A–Z</span>
         </div>
-        <div class="box row"><div class="avatar">AR</div><div class="grow"><b style="font-size:13px;">Arjun R.</b><div class="meta">Bengaluru · connected (mutual) <span class="req">S-07</span></div></div><span class="meta" data-toast="Options: Invite to trip · Block user (S-08)" style="cursor:pointer;">⋮</span></div>
-        <div class="box row"><div class="avatar">PD</div><div class="grow"><b style="font-size:13px;">Priya D.</b><div class="meta">Mumbai · connected</div></div><span class="meta" data-toast="Options: Invite to trip · Block user (S-08)" style="cursor:pointer;">⋮</span></div>
-        <div class="box row"><div class="avatar">RO</div><div class="grow"><b style="font-size:13px;">Rohan T.</b><div class="meta">Delhi · connected</div></div><span class="meta" data-toast="Options: Invite to trip · Block user (S-08)" style="cursor:pointer;">⋮</span></div>
+        <div class="box row"><div class="avatar" style="background:linear-gradient(135deg,#0fa594,#0b8174)">AR</div><div class="grow"><b style="font-size:13px;">Arjun R.</b><div class="meta">Bengaluru · connected (mutual) <span class="req">S-07</span></div></div><span class="ico" data-toast="Options: Invite to trip · Block user (S-08)" style="cursor:pointer;color:var(--muted)"><svg class="ic"><use href="#i-more"/></svg></span></div>
+        <div class="box row"><div class="avatar" style="background:linear-gradient(135deg,#6c5ce7,#4834b8)">PD</div><div class="grow"><b style="font-size:13px;">Priya D.</b><div class="meta">Mumbai · connected</div></div><span class="ico" data-toast="Options: Invite to trip · Block user (S-08)" style="cursor:pointer;color:var(--muted)"><svg class="ic"><use href="#i-more"/></svg></span></div>
+        <div class="box row"><div class="avatar" style="background:linear-gradient(135deg,#0984e3,#0667b3)">RO</div><div class="grow"><b style="font-size:13px;">Rohan T.</b><div class="meta">Delhi · connected</div></div><span class="ico" data-toast="Options: Invite to trip · Block user (S-08)" style="cursor:pointer;color:var(--muted)"><svg class="ic"><use href="#i-more"/></svg></span></div>
         <div class="meta">Blocking prevents requests, trip invites & search visibility <span class="req">S-08</span></div>
-        <button class="btn" data-go="home">Go to My Trips →</button>
+        <button class="btn" data-go="home">Go to My Trips <svg class="ic"><use href="#i-arrow-right"/></svg></button>
       </div>
     </section>
 
     <!-- ============ 4. HOME ============ -->
     <section class="screen" id="home">
-      <div class="topbar"><h3>My Trips</h3><span class="mini">🔔 3</span></div>
+      <div class="topbar"><h3>My Trips</h3><span class="ico" style="position:relative;"><svg class="ic"><use href="#i-bell"/></svg><span style="position:absolute;top:3px;right:4px;width:15px;height:15px;background:var(--coral);color:#fff;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;">3</span></span></div>
       <div class="body">
         <div class="label">Active trips</div>
-        <div class="box" data-go="overview" style="cursor:pointer;">
-          <div class="row" style="justify-content:space-between;">
-            <b>Goa Reunion 2026 🌴</b><span class="badge">PLANNING</span>
+        <div class="box" data-go="overview" style="cursor:pointer; padding:0; overflow:hidden;">
+          <div class="photo" id="homeGoa" style="height:108px; border-radius:0;">
+            <div class="scrim"></div>
+            <span class="badge" style="position:absolute; top:10px; left:10px; background:rgba(255,255,255,.92); color:var(--accent-dk); z-index:2;">PLANNING</span>
+            <div class="cap"><div class="nm" style="font-size:17px;">Goa Reunion 2026</div></div>
           </div>
-          <div class="meta" style="margin:6px 0;">8 members · You are Trip Admin</div>
-          <div class="progress"><i style="width:35%"></i></div>
-          <div class="meta" style="margin-top:5px;">Current phase: Preference survey — 4/8 responded · Tap to open</div>
+          <div style="padding:11px 13px 13px;">
+            <div class="meta" style="display:flex;align-items:center;gap:5px;"><svg class="ic"><use href="#i-users"/></svg>8 members · You are Trip Admin</div>
+            <div class="progress" style="margin:8px 0 5px;"><i style="width:35%"></i></div>
+            <div class="meta" style="display:flex;align-items:center;gap:5px;"><svg class="ic"><use href="#i-sliders"/></svg>Preference survey — 4/8 responded · Tap to open</div>
+          </div>
         </div>
-        <div class="box" data-go="livemap" style="cursor:pointer;">
-          <div class="row" style="justify-content:space-between;">
-            <b>Manali Convoy ⛰️</b><span class="badge">IN PROGRESS</span>
+        <div class="box" data-go="livemap" style="cursor:pointer; padding:0; overflow:hidden;">
+          <div class="photo" style="height:108px; border-radius:0; background:linear-gradient(135deg,#5b7c99,#33506b);">
+            <div class="scrim"></div>
+            <span class="badge" style="position:absolute; top:10px; left:10px; background:var(--coral); color:#fff; z-index:2; display:flex; align-items:center; gap:4px;"><svg class="ic"><use href="#i-radio"/></svg>LIVE</span>
+            <svg class="ic" style="position:absolute;top:14px;right:14px;font-size:30px;color:rgba(255,255,255,.55);z-index:2;"><use href="#i-mountain"/></svg>
+            <div class="cap"><div class="nm" style="font-size:17px;">Manali Convoy</div></div>
           </div>
-          <div class="meta" style="margin:6px 0;">5 members · 3 vehicles · Live Mode ON</div>
-          <div class="progress"><i style="width:100%"></i></div>
-          <div class="meta" style="margin-top:5px;">Day 2 of 5 · Tap to open Live Map</div>
+          <div style="padding:11px 13px 13px;">
+            <div class="meta" style="display:flex;align-items:center;gap:5px;"><svg class="ic"><use href="#i-car"/></svg>5 members · 3 vehicles · Live Mode ON</div>
+            <div class="progress" style="margin:8px 0 5px;"><i style="width:100%"></i></div>
+            <div class="meta" style="display:flex;align-items:center;gap:5px;"><svg class="ic"><use href="#i-pin"/></svg>Day 2 of 5 · Tap to open Live Map</div>
+          </div>
         </div>
         <div class="label">Past trips</div>
-        <div class="box row" style="opacity:.6;">
-          <div class="img" style="width:44px;height:44px;"><span>IMG</span></div>
+        <div class="box row" style="opacity:.75;">
+          <div class="img" style="width:46px;height:46px; background:linear-gradient(135deg,#7cae6a,#4e8a4a);"><svg class="ic" style="font-size:20px;color:rgba(255,255,255,.85)"><use href="#i-mountain"/></svg></div>
           <div class="grow"><b style="font-size:13px;">Coorg Weekend</b><div class="meta">Mar 2026 · 6 members · Completed</div></div>
+          <span class="ico" style="color:var(--muted)"><svg class="ic"><use href="#i-chevron-right"/></svg></span>
         </div>
         <div class="meta">A user can be part of multiple simultaneous trips <span class="req">S-13</span></div>
       </div>
-      <button class="fab" data-go="create" title="New trip">+</button>
+      <button class="fab" data-go="create" title="New trip"><svg class="ic"><use href="#i-plus"/></svg></button>
     </section>
 
     <!-- ============ 5. CREATE TRIP ============ -->
     <section class="screen" id="create">
-      <div class="topbar"><button class="back" data-go="home">←</button><h3>Create a Trip</h3><span class="mini">S-10</span></div>
+      <div class="topbar"><button class="back" data-go="home"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Create a Trip</h3><span class="mini">S-10</span></div>
       <div class="body">
         <div class="label">Trip name</div>
         <div class="input">e.g. Goa Reunion 2026</div>
         <div class="label">Invite friends <span class="req">S-10 / S-11</span></div>
         <div class="meta">Invitees get a push notification · accept or decline · 3–30 members per trip <span class="req">S-14</span></div>
-        <div class="box row"><span class="check done" onclick="this.classList.toggle('done')">✓</span><div class="avatar">AR</div><div class="grow"><b style="font-size:13px;">Arjun R.</b></div></div>
-        <div class="box row"><span class="check done" onclick="this.classList.toggle('done')">✓</span><div class="avatar">PD</div><div class="grow"><b style="font-size:13px;">Priya D.</b></div></div>
-        <div class="box row"><span class="check" onclick="this.classList.toggle('done')"></span><div class="avatar">RO</div><div class="grow"><b style="font-size:13px;">Rohan T.</b></div></div>
-        <div class="box row"><span class="check" onclick="this.classList.toggle('done')"></span><div class="avatar">SM</div><div class="grow"><b style="font-size:13px;">Sneha M.</b></div></div>
-        <div class="alert">You will become <b>Trip Admin</b> — you can add or remove members until the trip is In Progress <span class="req">S-12</span></div>
-        <button class="btn" data-go="overview" data-toast="Trip created — invitations sent">Create Trip & Send Invites →</button>
+        <div class="box row"><span class="check done" onclick="this.classList.toggle('done')"><svg class="ic"><use href="#i-check"/></svg></span><div class="avatar" style="background:linear-gradient(135deg,#0fa594,#0b8174)">AR</div><div class="grow"><b style="font-size:13px;">Arjun R.</b></div></div>
+        <div class="box row"><span class="check done" onclick="this.classList.toggle('done')"><svg class="ic"><use href="#i-check"/></svg></span><div class="avatar" style="background:linear-gradient(135deg,#6c5ce7,#4834b8)">PD</div><div class="grow"><b style="font-size:13px;">Priya D.</b></div></div>
+        <div class="box row"><span class="check" onclick="this.classList.toggle('done')"><svg class="ic"><use href="#i-check"/></svg></span><div class="avatar" style="background:linear-gradient(135deg,#0984e3,#0667b3)">RO</div><div class="grow"><b style="font-size:13px;">Rohan T.</b></div></div>
+        <div class="box row"><span class="check" onclick="this.classList.toggle('done')"><svg class="ic"><use href="#i-check"/></svg></span><div class="avatar" style="background:linear-gradient(135deg,#ff6b5e,#e8584b)">SM</div><div class="grow"><b style="font-size:13px;">Sneha M.</b></div></div>
+        <div class="alert"><svg class="ic" style="font-size:15px;flex-shrink:0;margin-top:1px;"><use href="#i-user-plus"/></svg><div>You will become <b>Trip Admin</b> — you can add or remove members until the trip is In Progress <span class="req">S-12</span></div></div>
+        <button class="btn" data-go="overview" data-toast="Trip created — invitations sent">Create Trip & Send Invites <svg class="ic"><use href="#i-arrow-right"/></svg></button>
       </div>
     </section>
 
     <!-- ============ 6. TRIP OVERVIEW ============ -->
     <section class="screen" id="overview">
-      <div class="topbar"><button class="back" data-go="home">←</button><h3>Goa Reunion 2026</h3><span class="mini">ADMIN</span></div>
+      <div class="topbar"><button class="back" data-go="home"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Goa Reunion 2026</h3><span class="mini">ADMIN</span></div>
       <div class="body">
         <div class="label">Trip phase</div>
-        <div class="row" style="font-size:9px; text-align:center; gap:2px;">
-          <div style="flex:1;"><div class="check done" style="margin:0 auto;">✓</div>Group</div>
-          <div style="flex:1;"><div class="check done" style="margin:0 auto; border-radius:50%;">●</div>Survey</div>
+        <div class="row" style="font-size:9px; text-align:center; gap:2px; color:var(--muted);">
+          <div style="flex:1;"><div class="check done" style="margin:0 auto;"><svg class="ic"><use href="#i-check"/></svg></div>Group</div>
+          <div style="flex:1;"><div class="check" style="margin:0 auto; background:var(--accent-lt); border-color:var(--accent); color:var(--accent-dk);"><svg class="ic" style="font-size:11px"><use href="#i-clock"/></svg></div><b style="color:var(--accent-dk)">Survey</b></div>
           <div style="flex:1;"><div class="check" style="margin:0 auto;"></div>Discover</div>
           <div style="flex:1;"><div class="check" style="margin:0 auto;"></div>Repository</div>
           <div style="flex:1;"><div class="check" style="margin:0 auto;"></div>Itinerary</div>
@@ -310,30 +424,30 @@
         <div class="meta" style="text-align:center;">Linear journey, but no step is mandatory — jump to any module (progressive disclosure)</div>
         <div class="label">Members (8)</div>
         <div class="row">
-          <div class="avatar">ME</div><div class="avatar">AR</div><div class="avatar">PD</div><div class="avatar">RO</div><div class="avatar" style="opacity:.45;">SM</div><div class="avatar" style="opacity:.45;">+3</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#16202e,#3a4861)">ME</div><div class="avatar" style="background:linear-gradient(135deg,#0fa594,#0b8174)">AR</div><div class="avatar" style="background:linear-gradient(135deg,#6c5ce7,#4834b8)">PD</div><div class="avatar" style="background:linear-gradient(135deg,#0984e3,#0667b3)">RO</div><div class="avatar" style="opacity:.45;">SM</div><div class="avatar" style="opacity:.45; background:var(--muted)">+3</div>
           <div class="meta grow">5 accepted · 3 pending <span class="req">S-11</span></div>
           <button class="btn sm ghost" data-toast="Admin: add / remove members (S-12)">Manage</button>
         </div>
         <div class="label">Modules</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div class="box" data-go="survey" style="cursor:pointer;"><b style="font-size:13px;">📋 Survey</b><div class="meta">4/8 responded · OPEN</div></div>
-          <div class="box" data-go="discover" style="cursor:pointer;"><b style="font-size:13px;">🗺️ Discover</b><div class="meta">Awaiting group profile</div></div>
-          <div class="box" data-go="repo" style="cursor:pointer;"><b style="font-size:13px;">📁 Repository</b><div class="meta">6 documents</div></div>
-          <div class="box" data-go="itinerary" style="cursor:pointer;"><b style="font-size:13px;">🗓️ Itinerary</b><div class="meta">3 days planned</div></div>
-          <div class="box" data-go="expenses" style="cursor:pointer;"><b style="font-size:13px;">💰 Expenses</b><div class="meta">₹18,450 · you get ₹1,310</div></div>
-          <div class="box" data-go="livemap" style="cursor:pointer;"><b style="font-size:13px;">📍 Live Mode</b><div class="meta">In Progress + consent</div></div>
+          <div class="box" data-go="survey" style="cursor:pointer;"><b style="font-size:13px;display:flex;align-items:center;gap:7px;"><span class="licon" style="width:30px;height:30px;border-radius:9px;"><svg class="ic" style="font-size:15px"><use href="#i-sliders"/></svg></span>Survey</b><div class="meta" style="margin-top:6px;">4/8 responded · OPEN</div></div>
+          <div class="box" data-go="discover" style="cursor:pointer;"><b style="font-size:13px;display:flex;align-items:center;gap:7px;"><span class="licon" style="width:30px;height:30px;border-radius:9px;"><svg class="ic" style="font-size:15px"><use href="#i-map"/></svg></span>Discover</b><div class="meta" style="margin-top:6px;">Awaiting group profile</div></div>
+          <div class="box" data-go="repo" style="cursor:pointer;"><b style="font-size:13px;display:flex;align-items:center;gap:7px;"><span class="licon gold" style="width:30px;height:30px;border-radius:9px;"><svg class="ic" style="font-size:15px"><use href="#i-folder"/></svg></span>Repository</b><div class="meta" style="margin-top:6px;">6 documents</div></div>
+          <div class="box" data-go="itinerary" style="cursor:pointer;"><b style="font-size:13px;display:flex;align-items:center;gap:7px;"><span class="licon" style="width:30px;height:30px;border-radius:9px;"><svg class="ic" style="font-size:15px"><use href="#i-list"/></svg></span>Itinerary</b><div class="meta" style="margin-top:6px;">3 days planned</div></div>
+          <div class="box" data-go="expenses" style="cursor:pointer;"><b style="font-size:13px;display:flex;align-items:center;gap:7px;"><span class="licon coral" style="width:30px;height:30px;border-radius:9px;"><svg class="ic" style="font-size:15px"><use href="#i-wallet"/></svg></span>Expenses</b><div class="meta" style="margin-top:6px;">₹18,450 · you get ₹1,310</div></div>
+          <div class="box" data-go="livemap" style="cursor:pointer;"><b style="font-size:13px;display:flex;align-items:center;gap:7px;"><span class="licon coral" style="width:30px;height:30px;border-radius:9px;"><svg class="ic" style="font-size:15px"><use href="#i-radio"/></svg></span>Live Mode</b><div class="meta" style="margin-top:6px;">In Progress + consent</div></div>
         </div>
-        <button class="btn ghost" data-go="results">View survey results →</button>
+        <button class="btn ghost" data-go="results">View survey results <svg class="ic"><use href="#i-arrow-right"/></svg></button>
       </div>
     </section>
 
     <!-- ============ 7. SURVEY ============ -->
     <section class="screen" id="survey">
-      <div class="topbar"><button class="back" data-go="overview">←</button><h3>Group Preference Survey</h3><span class="mini" id="qStep">Q1 / 6</span></div>
+      <div class="topbar"><button class="back" data-go="overview"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Group Preference Survey</h3><span class="mini" id="qStep">Q1 / 6</span></div>
       <div class="body">
         <div class="row" style="justify-content:space-between;">
           <span class="meta">4 of 8 members responded <span class="req">P-04</span></span>
-          <button class="btn sm ghost" data-toast="Reminder sent to 4 non-responders (auto at 24h & 48h) — P-05">Remind ↗</button>
+          <button class="btn sm ghost" data-toast="Reminder sent to 4 non-responders (auto at 24h & 48h) — P-05">Remind <svg class="ic"><use href="#i-share"/></svg></button>
         </div>
         <div class="progress"><i id="qBar" style="width:17%"></i></div>
 
@@ -342,27 +456,27 @@
           <h3 id="qText" style="font-size:17px;">What kind of place are we dreaming of?</h3>
           <div class="meta" id="qSel">Single select</div>
           <div class="chips" id="qOpts" data-single style="flex-direction:column; align-items:stretch;">
-            <span class="chip" style="padding:12px;">⛰️ Mountain</span>
-            <span class="chip sel" style="padding:12px;">🏖️ Beach</span>
-            <span class="chip" style="padding:12px;">🏜️ Desert</span>
-            <span class="chip" style="padding:12px;">🛶 Backwater</span>
-            <span class="chip" style="padding:12px;">🏙️ City</span>
-            <span class="chip" style="padding:12px;">🌲 Forest</span>
+            <span class="chip" style="padding:13px;"><svg class="ic"><use href="#i-mountain"/></svg> Mountain</span>
+            <span class="chip sel" style="padding:13px;"><svg class="ic"><use href="#i-waves"/></svg> Beach</span>
+            <span class="chip" style="padding:13px;"><svg class="ic"><use href="#i-sun"/></svg> Desert</span>
+            <span class="chip" style="padding:13px;"><svg class="ic"><use href="#i-globe"/></svg> Backwater</span>
+            <span class="chip" style="padding:13px;"><svg class="ic"><use href="#i-landmark"/></svg> City</span>
+            <span class="chip" style="padding:13px;"><svg class="ic"><use href="#i-compass"/></svg> Forest</span>
           </div>
         </div>
         <div class="meta">One dimension per screen · you can edit answers until survey closes (7-day auto-close) <span class="req">P-06</span></div>
         <div class="row">
-          <button class="btn ghost grow" onclick="surveyStep(-1)">← Prev</button>
-          <button class="btn grow" onclick="surveyStep(1)" id="qNext">Next →</button>
+          <button class="btn ghost grow" onclick="surveyStep(-1)"><svg class="ic"><use href="#i-arrow-left"/></svg> Prev</button>
+          <button class="btn grow" onclick="surveyStep(1)" id="qNext">Next <svg class="ic"><use href="#i-arrow-right"/></svg></button>
         </div>
       </div>
     </section>
 
     <!-- ============ 8. SURVEY RESULTS ============ -->
     <section class="screen" id="results">
-      <div class="topbar"><button class="back" data-go="survey">←</button><h3>Survey Results</h3><span class="mini">8/8 done</span></div>
+      <div class="topbar"><button class="back" data-go="survey"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Survey Results</h3><span class="mini">8/8 done</span></div>
       <div class="body">
-        <div class="alert"><b>Group Profile generated</b> — winning preference per dimension (plurality) <span class="req">P-07</span></div>
+        <div class="alert"><svg class="ic" style="font-size:15px;flex-shrink:0;margin-top:1px;"><use href="#i-check"/></svg><div><b>Group Profile generated</b> — winning preference per dimension (plurality) <span class="req">P-07</span></div></div>
 
         <div class="box">
           <div class="label">Terrain</div>
@@ -371,7 +485,7 @@
           <div class="bar-row"><span style="width:74px;">Backwater</span><div class="bar"><i style="width:12%"></i></div><span>1</span></div>
         </div>
         <div class="box">
-          <div class="label">Travel mode — TIE ⚠ <span class="req">P-08</span></div>
+          <div class="label" style="color:var(--coral);display:flex;align-items:center;gap:5px;"><svg class="ic" style="font-size:13px"><use href="#i-scale"/></svg>Travel mode — TIE <span class="req">P-08</span></div>
           <div class="bar-row win"><span style="width:74px;">Road trip</span><div class="bar"><i style="width:50%"></i></div><span>4</span></div>
           <div class="bar-row win"><span style="width:74px;">Flight</span><div class="bar"><i style="width:50%"></i></div><span>4</span></div>
           <div class="row" style="margin-top:8px;">
@@ -390,29 +504,30 @@
           <span class="meta">Individual responses: <b>visible</b> (Admin can toggle anonymity) <span class="req">P-09</span></span>
           <button class="btn sm ghost" data-toast="Survey re-launched — previous results archived (P-11)">Re-launch</button>
         </div>
-        <button class="btn" data-go="discover">Explore matching destinations → <span class="req">P-10</span></button>
+        <button class="btn" data-go="discover">Explore matching destinations <svg class="ic"><use href="#i-arrow-right"/></svg> <span class="req">P-10</span></button>
         <div class="meta" style="text-align:center;">Group Profile auto-passed as filters — no manual re-entry</div>
       </div>
     </section>
 
     <!-- ============ 9. DESTINATION MAP ============ -->
     <section class="screen" id="discover">
-      <div class="topbar"><button class="back" data-go="results">←</button><h3>Destination Discovery</h3><span class="mini">Module 3</span></div>
+      <div class="topbar"><button class="back" data-go="results"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Destination Discovery</h3><span class="mini">Module 3</span></div>
       <div class="body fade-in">
         <div class="chips">
-          <span class="chip sel">Beach</span><span class="chip sel">Relaxation</span><span class="chip sel">Mid-range</span><span class="chip">Within 800 km</span><span class="chip sel">Nov–Jan</span>
+          <span class="chip sel"><svg class="ic"><use href="#i-waves"/></svg>Beach</span><span class="chip sel"><svg class="ic"><use href="#i-heart"/></svg>Relaxation</span><span class="chip sel"><svg class="ic"><use href="#i-wallet"/></svg>Mid-range</span><span class="chip"><svg class="ic"><use href="#i-navigation"/></svg>Within 800 km</span><span class="chip sel"><svg class="ic"><use href="#i-calendar"/></svg>Nov–Jan</span>
         </div>
         <div class="meta">Filters pre-filled from Group Profile <span class="req">D-03</span> · changes visible to all members</div>
 
-        <div class="map" style="height:150px;">
+        <div class="map" style="height:160px;">
           <div class="grid"></div>
+          <div class="road" style="top:55%; transform:rotate(-12deg);"></div>
           <div class="pin" style="top:44%; left:19%;" data-dest="goa"><div class="dot"><b>92%</b></div><div class="tag">Goa</div></div>
           <div class="pin" style="top:30%; left:45%;" data-dest="gokarna"><div class="dot"><b>81%</b></div><div class="tag">Gokarna</div></div>
           <div class="pin" style="top:66%; left:58%;" data-dest="varkala"><div class="dot"><b>74%</b></div><div class="tag">Varkala</div></div>
-          <div class="pin" style="top:46%; left:83%;" data-dest="andaman"><div class="dot"><b>68%</b></div><div class="tag">Andaman ✈</div></div>
-          <div style="position:absolute; top:8px; left:8px;" class="row">
-            <span class="chip sel" style="font-size:10px; padding:3px 8px;">★ Match pins <span class="req">D-02</span></span>
-            <span class="chip" style="font-size:10px; padding:3px 8px;" data-toast="Mix of well-known + offbeat (D-04) · tap a cluster to zoom (D-05)">Well-known ⇄ Offbeat <span class="req">D-04</span><span class="req">D-05</span></span>
+          <div class="pin" style="top:46%; left:83%;" data-dest="andaman"><div class="dot"><svg class="ic"><use href="#i-plane"/></svg></div><div class="tag">Andaman</div></div>
+          <div style="position:absolute; top:9px; left:9px;" class="row">
+            <span class="chip sel" style="font-size:10px; padding:4px 9px;"><svg class="ic"><use href="#i-star"/></svg>Match pins <span class="req">D-02</span></span>
+            <span class="chip" style="font-size:10px; padding:4px 9px; background:#fff;" data-toast="Mix of well-known + offbeat (D-04) · tap a cluster to zoom (D-05)">Well-known ⇄ Offbeat <span class="req">D-04</span><span class="req">D-05</span></span>
           </div>
         </div>
 
@@ -426,14 +541,14 @@
 
     <!-- ============ 10. DESTINATION CARD ============ -->
     <section class="screen" id="destination">
-      <div class="topbar"><button class="back" data-go="discover">←</button><h3 id="dTitle">Goa</h3><span class="mini" id="dMatch">92% match</span></div>
+      <div class="topbar"><button class="back" data-go="discover"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3 id="dTitle">Goa</h3><span class="mini" id="dMatch">92% match</span></div>
       <div class="body fade-in" id="dBody">
         <div class="photo hero" id="dHero">
           <div class="scrim"></div>
           <div class="score" id="dScore">92% match</div>
           <div class="cap"><div class="nm" id="dName">Goa</div><div class="sub" id="dRegion">Konkan coast</div></div>
         </div>
-        <div class="row" style="justify-content:center;"><span class="meta" id="dGallery">📷 Hero gallery · 1 / 6 · swipe ◀▶ <span class="req">D-07</span></span></div>
+        <div class="row" style="justify-content:center;"><span class="meta" id="dGallery" style="display:flex;align-items:center;gap:5px;"><svg class="ic"><use href="#i-camera"/></svg>Hero gallery · 1 / 6 · swipe ◀▶ <span class="req">D-07</span></span></div>
 
         <div class="box">
           <div class="label">Match score <span class="req">D-08</span></div>
@@ -453,8 +568,8 @@
 
         <div class="box">
           <div class="label">Your travel months: <span id="dMonths">Nov–Jan</span> <span class="req">D-07</span></div>
-          <div class="meta" style="margin-top:5px;">☀ <span id="dWeather"></span> · 👥 Crowds: <span id="dCrowds"></span></div>
-          <div class="meta" style="margin-top:3px;">🎉 <span id="dEvents"></span></div>
+          <div class="meta" style="margin-top:6px;display:flex;align-items:center;gap:5px;"><svg class="ic" style="color:var(--gold)"><use href="#i-sun"/></svg><span id="dWeather"></span> · <svg class="ic"><use href="#i-eye"/></svg> Crowds: <span id="dCrowds"></span></div>
+          <div class="meta" style="margin-top:4px;display:flex;align-items:center;gap:5px;"><svg class="ic" style="color:var(--coral)"><use href="#i-star"/></svg><span id="dEvents"></span></div>
         </div>
 
         <div class="box">
@@ -464,16 +579,16 @@
 
         <div class="box">
           <div class="label">Group reactions <span class="req">D-10</span></div>
-          <div class="row" style="margin-top:6px;">
-            <span class="chip" id="dUp" data-toast="You reacted: Interested 👍">👍 Interested · 5</span>
-            <span class="chip" id="dMid" data-toast="You reacted: Not sure 🤔">🤔 Not sure · 2</span>
-            <span class="chip" id="dDown" data-toast="You reacted: Not interested 👎">👎 Not int. · 1</span>
+          <div class="row" style="margin-top:8px;">
+            <span class="chip sel" id="dUp" data-toast="You reacted: Interested"><svg class="ic"><use href="#i-heart"/></svg> Interested · 5</span>
+            <span class="chip" id="dMid" data-toast="You reacted: Not sure"><svg class="ic"><use href="#i-clock"/></svg> Not sure · 2</span>
+            <span class="chip" id="dDown" data-toast="You reacted: Not interested"><svg class="ic"><use href="#i-x"/></svg> Not int. · 1</span>
           </div>
         </div>
 
         <div class="row">
-          <button class="btn ghost grow" data-toast="Added to group shortlist (D-06)">+ Shortlist</button>
-          <button class="btn grow" data-go="repo" data-toast="Destination confirmed — all members notified (D-11)">✓ Confirm (Admin)</button>
+          <button class="btn ghost grow" data-toast="Added to group shortlist (D-06)"><svg class="ic"><use href="#i-plus"/></svg> Shortlist</button>
+          <button class="btn grow" data-go="repo" data-toast="Destination confirmed — all members notified (D-11)"><svg class="ic"><use href="#i-check"/></svg> Confirm (Admin)</button>
         </div>
         <div class="meta" style="text-align:center;">Confirming locks the next phase · reversible until itinerary building begins <span class="req">D-11</span></div>
       </div>
@@ -481,126 +596,124 @@
 
     <!-- ============ 11. REPOSITORY ============ -->
     <section class="screen" id="repo">
-      <div class="topbar"><button class="back" data-go="overview">←</button><h3>Trip Repository</h3><span class="mini">Module 4</span></div>
+      <div class="topbar"><button class="back" data-go="overview"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Trip Repository</h3><span class="mini">Module 4</span></div>
       <div class="tabs" id="repoTabs">
-        <button class="on">✈ Flights & Transport</button><button>🏨 Stay</button><button>🎟 Activities</button><button>🪪 Docs</button><button>… Misc</button>
+        <button class="on"><svg class="ic"><use href="#i-plane"/></svg>Transport</button><button><svg class="ic"><use href="#i-bed"/></svg>Stay</button><button><svg class="ic"><use href="#i-ticket"/></svg>Activities</button><button><svg class="ic"><use href="#i-id"/></svg>Docs</button><button><svg class="ic"><use href="#i-more"/></svg>Misc</button>
       </div>
       <div class="body">
-        <div class="alert" style="font-size:11px;">📴 Offline copy up to date — accessible without internet <span class="req">R-05</span></div>
+        <div class="alert" style="font-size:11px;"><svg class="ic" style="font-size:14px;flex-shrink:0;"><use href="#i-power"/></svg><div>Offline copy up to date — accessible without internet <span class="req">R-05</span></div></div>
 
         <div class="box">
-          <div class="row" style="justify-content:space-between;"><b style="font-size:13px;">📄 GOI_flight_tickets.pdf</b><span class="badge lt">PDF · 2.1 MB</span></div>
-          <div class="meta">Uploaded by Arjun · 04 Jun, 9:12 PM <span class="req">R-04</span> · only uploader / Admin can edit</div>
+          <div class="row"><span class="licon coral"><svg class="ic"><use href="#i-file"/></svg></span><div class="grow"><b style="font-size:13px;">GOI_flight_tickets.pdf</b><div class="meta">By Arjun · 04 Jun, 9:12 PM <span class="req">R-04</span></div></div><span class="badge lt">PDF · 2.1 MB</span></div>
         </div>
 
-        <div class="box" style="background:var(--fill);">
-          <div class="label">Structured booking entry <span class="req">R-03</span></div>
-          <div style="font-size:12px; margin-top:6px; line-height:1.7;">
+        <div class="box" style="background:var(--accent-lt); border-color:var(--accent);">
+          <div class="label" style="color:var(--accent-dk);display:flex;align-items:center;gap:5px;"><svg class="ic"><use href="#i-plane"/></svg>Structured booking entry <span class="req">R-03</span></div>
+          <div style="font-size:12px; margin-top:7px; line-height:1.7; color:var(--ink);">
             <b>IndiGo 6E-345</b> · BLR → GOI<br>
             PNR: <b>XR4B2K</b> · 12 Dec, 06:40<br>
             Passengers: Sandeep +3 · Notes: web check-in opens 48h prior
           </div>
-          <div class="meta" style="margin-top:4px;">Searchable formatted card · added by You · 03 Jun</div>
+          <div class="meta" style="margin-top:5px;">Searchable formatted card · added by You · 03 Jun</div>
         </div>
 
         <div class="box">
-          <div class="row" style="justify-content:space-between;"><b style="font-size:13px;">🖼 hotel_booking.jpg</b><span class="badge lt">JPG · 0.8 MB</span></div>
-          <div class="meta">Uploaded by Priya · 05 Jun, 11:30 AM</div>
+          <div class="row"><span class="licon gold"><svg class="ic"><use href="#i-image"/></svg></span><div class="grow"><b style="font-size:13px;">hotel_booking.jpg</b><div class="meta">By Priya · 05 Jun, 11:30 AM</div></div><span class="badge lt">JPG · 0.8 MB</span></div>
         </div>
 
         <div class="row">
-          <button class="btn ghost grow" data-toast="Upload: PDF / JPG / PNG / JPEG · max 10MB (R-02)">⬆ Upload file</button>
-          <button class="btn ghost grow" data-toast="New structured text entry (R-03)">+ Text entry</button>
+          <button class="btn ghost grow" data-toast="Upload: PDF / JPG / PNG / JPEG · max 10MB (R-02)"><svg class="ic"><use href="#i-share"/></svg> Upload file</button>
+          <button class="btn ghost grow" data-toast="New structured text entry (R-03)"><svg class="ic"><use href="#i-plus"/></svg> Text entry</button>
         </div>
 
         <div class="label">Trip checklist <span class="req">R-06</span></div>
-        <div class="box row"><span class="check done" onclick="this.classList.toggle('done')">✓</span><div class="grow" style="font-size:12px;">Book return cabs <div class="meta">Assigned: Arjun</div></div></div>
-        <div class="box row"><span class="check" onclick="this.classList.toggle('done')"></span><div class="grow" style="font-size:12px;">Carry power strip + speaker <div class="meta">Assigned: Rohan</div></div></div>
-        <div class="box row"><span class="check" onclick="this.classList.toggle('done')"></span><div class="grow" style="font-size:12px;">Travel insurance for all <div class="meta">Assigned: You</div></div></div>
-        <button class="btn sm ghost" data-toast="Item added to checklist">+ Add item & assign</button>
+        <div class="box row"><span class="check done" onclick="this.classList.toggle('done')"><svg class="ic"><use href="#i-check"/></svg></span><div class="grow" style="font-size:12px;">Book return cabs <div class="meta">Assigned: Arjun</div></div></div>
+        <div class="box row"><span class="check" onclick="this.classList.toggle('done')"><svg class="ic"><use href="#i-check"/></svg></span><div class="grow" style="font-size:12px;">Carry power strip + speaker <div class="meta">Assigned: Rohan</div></div></div>
+        <div class="box row"><span class="check" onclick="this.classList.toggle('done')"><svg class="ic"><use href="#i-check"/></svg></span><div class="grow" style="font-size:12px;">Travel insurance for all <div class="meta">Assigned: You</div></div></div>
+        <button class="btn sm ghost" data-toast="Item added to checklist"><svg class="ic"><use href="#i-plus"/></svg> Add item & assign</button>
 
-        <button class="btn ghost" data-toast="Generating shareable PDF of full repository (R-07 · P2)">⬇ Export trip PDF (Admin)</button>
-        <button class="btn" data-go="itinerary">Open Itinerary Builder →</button>
+        <button class="btn ghost" data-toast="Generating shareable PDF of full repository (R-07 · P2)"><svg class="ic"><use href="#i-file"/></svg> Export trip PDF (Admin)</button>
+        <button class="btn" data-go="itinerary">Open Itinerary Builder <svg class="ic"><use href="#i-arrow-right"/></svg></button>
       </div>
     </section>
 
     <!-- ============ 12. ITINERARY ============ -->
     <section class="screen" id="itinerary">
-      <div class="topbar"><button class="back" data-go="overview">←</button><h3>Itinerary — Goa</h3><span class="mini">12–16 Dec</span></div>
+      <div class="topbar"><button class="back" data-go="overview"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Itinerary — Goa</h3><span class="mini">12–16 Dec</span></div>
       <div class="tabs">
         <button>Day 1</button><button class="on">Day 2</button><button>Day 3</button><button>Day 4</button><button>Day 5</button>
       </div>
       <div class="body">
         <div class="row" style="justify-content:space-between;">
           <span class="meta">Segment: North Goa (Day 1–3) → South Goa (Day 4–5) <span class="req">I-06</span></span>
-          <span class="chip" data-toast="Map view: all attractions pinned with suggested route (I-09)">🗺 Map</span>
+          <span class="chip" data-toast="Map view: all attractions pinned with suggested route (I-09)"><svg class="ic"><use href="#i-map"/></svg>Map</span>
         </div>
 
-        <div class="alert">⚠ <b>Day over-scheduled</b> — planned 14.5h vs 13h available (8am–9pm). Suggest moving <b>Fort Aguada</b> to Day 3. <span class="req">I-08</span>
-          <button class="btn sm" style="margin-top:6px;" data-toast="Fort Aguada moved to Day 3 — day re-balanced">Move it</button>
+        <div class="alert" style="background:#fff4e8;border-color:#f4c48a;color:#8a5a14;"><svg class="ic" style="font-size:15px;flex-shrink:0;margin-top:1px;color:var(--gold)"><use href="#i-clock"/></svg><div><b>Day over-scheduled</b> — planned 14.5h vs 13h available (8am–9pm). Suggest moving <b>Fort Aguada</b> to Day 3. <span class="req">I-08</span>
+          <button class="btn sm" style="margin-top:8px;" data-toast="Fort Aguada moved to Day 3 — day re-balanced">Move it</button></div>
         </div>
 
         <div class="label">Morning <span class="req">I-01</span></div>
         <div class="box">
           <div class="row">
-            <div class="img" style="width:52px;height:52px;"><span>IMG</span></div>
+            <div class="img" style="width:58px;height:58px;background-image:url(&quot;https://commons.wikimedia.org/wiki/Special:FilePath/Vagator%20Beach,%20Goa,%20India.jpg?width=160&quot;);"></div>
             <div class="grow">
               <b style="font-size:13px;">Baga Beach</b> <span class="badge lt">Beach</span>
               <div class="meta">Water sports & shacks · ~3h · best before noon <span class="req">I-03</span></div>
             </div>
           </div>
-          <div class="meta" style="margin-top:8px; line-height:1.8;">
+          <div class="meta" style="margin-top:8px; line-height:1.9;">
             <span class="stars">Kid-friendly ★★★★☆</span> · <span class="stars">Cleanliness ★★★☆☆</span><br>
-            <span class="stars">Weather comfort ★★★★★ (Dec)</span> · Vibe: <b>Social/Buzzy</b><br>
+            <span class="stars">Weather ★★★★★ (Dec)</span> · Vibe: <b>Social/Buzzy</b><br>
             Crowd: <b>HIGH</b> in Dec (Low in Jul–Sep)
           </div>
           <div class="row" style="margin-top:8px;">
-            <button class="btn sm grow" data-toast="Your vote: Add — 6/8 votes, auto-added ✓ (I-04)">👍 Add · 6</button>
-            <button class="btn sm ghost grow" data-toast="Your vote: Skip (Admin can override any vote)">👎 Skip · 1</button>
+            <button class="btn sm grow" data-toast="Your vote: Add — 6/8 votes, auto-added (I-04)"><svg class="ic"><use href="#i-check"/></svg> Add · 6</button>
+            <button class="btn sm ghost grow" data-toast="Your vote: Skip (Admin can override any vote)"><svg class="ic"><use href="#i-x"/></svg> Skip · 1</button>
           </div>
         </div>
 
-        <div class="row" style="justify-content:center;"><span class="chip" data-toast="Transit via Google Directions API (I-07)">🚗 25 min by cab → <span class="req">I-07</span></span></div>
+        <div class="row" style="justify-content:center;"><span class="chip" data-toast="Transit via Google Directions API (I-07)"><svg class="ic"><use href="#i-car"/></svg>25 min by cab <span class="req">I-07</span></span></div>
 
         <div class="label">Afternoon</div>
         <div class="box">
           <div class="row">
-            <div class="img" style="width:52px;height:52px;"><span>IMG</span></div>
+            <div class="img" style="width:58px;height:58px;background:linear-gradient(135deg,#c9a06a,#9c6b3a);"><svg class="ic" style="font-size:24px;color:rgba(255,255,255,.9)"><use href="#i-landmark"/></svg></div>
             <div class="grow">
               <b style="font-size:13px;">Old Goa Churches</b> <span class="badge lt">Heritage</span>
               <div class="meta">UNESCO site · ~2.5h · 12–4pm fine</div>
             </div>
           </div>
-          <div class="meta" style="margin-top:8px;"><span class="stars">Kid ★★★☆☆ · Clean ★★★★★ · Weather ★★★★☆</span> · Vibe: <b>Peaceful</b> · Crowd: <b>Moderate</b></div>
+          <div class="meta" style="margin-top:8px;"><span class="stars">Kid ★★★ · Clean ★★★★★ · Weather ★★★★</span> · Vibe: <b>Peaceful</b> · Crowd: <b>Moderate</b></div>
           <div class="row" style="margin-top:8px;">
-            <button class="btn sm grow" data-toast="Your vote: Add — 5/8">👍 Add · 5</button>
-            <button class="btn sm ghost grow" data-toast="Your vote: Skip — 2/8">👎 Skip · 2</button>
+            <button class="btn sm grow" data-toast="Your vote: Add — 5/8"><svg class="ic"><use href="#i-check"/></svg> Add · 5</button>
+            <button class="btn sm ghost grow" data-toast="Your vote: Skip — 2/8"><svg class="ic"><use href="#i-x"/></svg> Skip · 2</button>
           </div>
         </div>
 
-        <div class="row" style="justify-content:center;"><span class="chip">🛺 40 min by auto →</span></div>
+        <div class="row" style="justify-content:center;"><span class="chip"><svg class="ic"><use href="#i-car"/></svg>40 min by auto</span></div>
 
         <div class="label">Evening</div>
         <div class="box" style="border-style:dashed;">
-          <b style="font-size:13px;">🌅 Sunset @ secret beach</b> <span class="badge lt">CUSTOM</span>
-          <div class="meta">Added manually by Rohan — not in curated DB <span class="req">I-05</span></div>
+          <b style="font-size:13px;display:flex;align-items:center;gap:6px;"><svg class="ic" style="color:var(--gold)"><use href="#i-sunrise"/></svg>Sunset @ secret beach</b> <span class="badge lt">CUSTOM</span>
+          <div class="meta" style="margin-top:4px;">Added manually by Rohan — not in curated DB <span class="req">I-05</span></div>
         </div>
 
         <div class="label">Suggested for this day (8–12, ranked by rating × your survey prefs) <span class="req">I-02</span></div>
         <div class="row" style="overflow-x:auto;">
-          <div class="box" style="min-width:120px;"><b style="font-size:12px;">Chapora Fort</b><div class="meta">★4.4 · 1h</div><button class="btn sm ghost" style="margin-top:4px;" data-toast="Proposed to group for voting">+ Propose</button></div>
-          <div class="box" style="min-width:120px;"><b style="font-size:12px;">Anjuna Flea Mkt</b><div class="meta">★4.2 · 2h</div><button class="btn sm ghost" style="margin-top:4px;" data-toast="Proposed to group for voting">+ Propose</button></div>
-          <div class="box" style="min-width:120px;"><b style="font-size:12px;">Dudhsagar Falls</b><div class="meta">★4.7 · 5h</div><button class="btn sm ghost" style="margin-top:4px;" data-toast="Proposed to group for voting">+ Propose</button></div>
+          <div class="box" style="min-width:120px;"><b style="font-size:12px;">Chapora Fort</b><div class="meta" style="display:flex;align-items:center;gap:3px;"><svg class="ic" style="color:var(--gold)"><use href="#i-star"/></svg>4.4 · 1h</div><button class="btn sm ghost" style="margin-top:6px;" data-toast="Proposed to group for voting"><svg class="ic"><use href="#i-plus"/></svg> Propose</button></div>
+          <div class="box" style="min-width:120px;"><b style="font-size:12px;">Anjuna Flea Mkt</b><div class="meta" style="display:flex;align-items:center;gap:3px;"><svg class="ic" style="color:var(--gold)"><use href="#i-star"/></svg>4.2 · 2h</div><button class="btn sm ghost" style="margin-top:6px;" data-toast="Proposed to group for voting"><svg class="ic"><use href="#i-plus"/></svg> Propose</button></div>
+          <div class="box" style="min-width:120px;"><b style="font-size:12px;">Dudhsagar Falls</b><div class="meta" style="display:flex;align-items:center;gap:3px;"><svg class="ic" style="color:var(--gold)"><use href="#i-star"/></svg>4.7 · 5h</div><button class="btn sm ghost" style="margin-top:6px;" data-toast="Proposed to group for voting"><svg class="ic"><use href="#i-plus"/></svg> Propose</button></div>
         </div>
 
-        <button class="btn ghost" data-toast="View-only link copied — shareable with non-app users (I-10 · P2)">🔗 Share view-only itinerary</button>
-        <button class="btn" data-go="livemap">Trip is starting — Go Live →</button>
+        <button class="btn ghost" data-toast="View-only link copied — shareable with non-app users (I-10 · P2)"><svg class="ic"><use href="#i-share"/></svg> Share view-only itinerary</button>
+        <button class="btn" data-go="livemap">Trip is starting — Go Live <svg class="ic"><use href="#i-arrow-right"/></svg></button>
       </div>
     </section>
 
     <!-- ============ 13. LIVE MAP ============ -->
     <section class="screen" id="livemap">
-      <div class="topbar"><button class="back" data-go="home">←</button><h3>Live Map — Manali Convoy</h3><span class="mini" data-toast="Location consent per session · pause anytime · data deleted 7 days post-trip (RT-01/RT-08)" style="cursor:pointer;">● SHARING ▾</span></div>
+      <div class="topbar"><button class="back" data-go="home"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Live Map — Manali Convoy</h3><span class="mini" data-toast="Location consent per session · pause anytime · data deleted 7 days post-trip (RT-01/RT-08)" style="cursor:pointer;background:#ffeae7;color:var(--coral);display:flex;align-items:center;gap:4px;"><svg class="ic"><use href="#i-radio"/></svg>SHARING</span></div>
 
       <div class="map" style="flex:1; border:none; border-radius:0;">
         <div class="grid"></div>
@@ -609,31 +722,31 @@
 
         <!-- navigation banner -->
         <div style="position:absolute; top:10px; left:10px; right:10px; z-index:4;" class="box row">
-          <b style="font-size:20px;">↰</b>
-          <div class="grow"><b style="font-size:13px;">In 400 m, turn left — NH3</b><div class="meta">Navigation + all members on ONE map <span class="req">RT-02</span> · voice-guided · ETA 4:42 PM <span class="req">RT-09</span></div></div>
-          <span class="meta" data-toast="Shared destination: Solang Valley — any member can update, Admin approves, everyone's nav follows (RT-10)" style="cursor:pointer;">🎯</span>
-          <span class="meta" data-toast="Offline tiles for route downloaded — 112MB (RT-11)" style="cursor:pointer;">📴</span>
+          <span class="licon"><svg class="ic" style="font-size:19px"><use href="#i-corner-up-left"/></svg></span>
+          <div class="grow"><b style="font-size:13px;">In 400 m, turn left — NH3</b><div class="meta">All members on ONE map <span class="req">RT-02</span> · voice-guided · ETA 4:42 PM <span class="req">RT-09</span></div></div>
+          <span class="ico" data-toast="Shared destination: Solang Valley — any member can update, Admin approves, everyone's nav follows (RT-10)" style="cursor:pointer;color:var(--accent-dk)"><svg class="ic"><use href="#i-target"/></svg></span>
+          <span class="ico" data-toast="Offline tiles for route downloaded — 112MB (RT-11)" style="cursor:pointer;color:var(--muted)"><svg class="ic"><use href="#i-power"/></svg></span>
         </div>
 
         <!-- vehicle pins -->
-        <div class="pin me" style="top:58%; left:38%;" data-toast="You · Thar 🛻 · 62 km/h · ETA 4:42 PM (RT-04)"><div class="dot"><b>ME</b></div><div class="tag">Thar · 62 km/h</div></div>
+        <div class="pin me" style="top:58%; left:38%;" data-toast="You · Thar · 62 km/h · ETA 4:42 PM (RT-04)"><div class="dot"><b>ME</b></div><div class="tag">Thar · 62 km/h</div></div>
         <div class="pin" style="top:40%; left:60%;" data-toast="Tap pin → switch to 1-to-1 PTT with Arjun (RT-13)"><div class="dot"><b>AR</b></div><div class="tag">Swift · 71 km/h · +6 km</div></div>
-        <div class="pin" style="top:72%; left:22%;" data-toast="Rohan stopped 9 min — alert sent to group (RT-06)"><div class="dot"><b>RO</b></div><div class="tag">⚠ Stopped · 9 min</div></div>
-        <div class="pin" style="top:28%; left:80%;"><div class="dot"><b>📍</b></div><div class="tag">Meeting point: Sunrise Dhaba <span class="req">RT-07</span></div></div>
+        <div class="pin" style="top:72%; left:22%;" data-toast="Rohan stopped 9 min — alert sent to group (RT-06)"><div class="dot" style="background:var(--gold)"><b>RO</b></div><div class="tag">⚠ Stopped · 9 min</div></div>
+        <div class="pin" style="top:28%; left:80%;"><div class="dot" style="background:var(--ink)"><svg class="ic"><use href="#i-pin"/></svg></div><div class="tag">Meeting: Sunrise Dhaba <span class="req">RT-07</span></div></div>
 
         <!-- convoy widget -->
-        <div class="box" style="position:absolute; right:10px; top:84px; width:158px; font-size:10px; z-index:4; padding:8px;">
+        <div class="box" style="position:absolute; right:10px; top:84px; width:160px; font-size:10px; z-index:4; padding:9px;">
           <div class="label" style="font-size:9px;">Convoy status <span class="req">RT-05</span></div>
-          <div style="line-height:1.9;">
-            1. Arjun · Swift — <b>ahead 6 km</b><br>
+          <div style="line-height:2;">
+            1. Arjun · Swift — <b class="hl">ahead 6 km</b><br>
             2. <b>You · Thar</b> — on route<br>
-            3. Rohan · RE Bike — <b>⚠ stopped</b>
+            3. Rohan · RE Bike — <b style="color:var(--coral)">⚠ stopped</b>
           </div>
         </div>
 
         <!-- accuracy -->
         <div style="position:absolute; left:10px; top:84px; z-index:4;">
-          <span class="chip" style="font-size:10px;" data-toast="High accuracy 10s · Balanced 30s (default) · Battery saver 2min (RT-03)">📡 Balanced ▾</span>
+          <span class="chip" style="font-size:10px;background:#fff;" data-toast="High accuracy 10s · Balanced 30s (default) · Battery saver 2min (RT-03)"><svg class="ic"><use href="#i-gauge"/></svg>Balanced ▾</span>
         </div>
       </div>
 
@@ -642,66 +755,61 @@
         <div class="row" style="align-items:flex-end;">
           <div class="grow">
             <div class="label">Quick broadcast <span class="req">RT-16</span></div>
-            <div class="chips" style="margin-top:6px;">
-              <span class="chip" data-toast="Broadcast sent: ⛽ Taking a fuel stop">⛽ Fuel stop</span>
-              <span class="chip" data-toast="Broadcast sent: 🚗 On my way">🚗 On my way</span>
-              <span class="chip" data-toast="Broadcast sent: 🛑 Stopped — catch up">🛑 Stopped</span>
+            <div class="chips" style="margin-top:7px;">
+              <span class="chip" data-toast="Broadcast sent: Taking a fuel stop"><svg class="ic"><use href="#i-fuel"/></svg>Fuel stop</span>
+              <span class="chip" data-toast="Broadcast sent: On my way"><svg class="ic"><use href="#i-car"/></svg>On my way</span>
+              <span class="chip" data-toast="Broadcast sent: Stopped — catch up"><svg class="ic"><use href="#i-clock"/></svg>Stopped</span>
             </div>
             <div class="meta" style="margin-top:8px;">PTT: hold to talk → whole group · tap a pin for 1-to-1 <span class="req">RT-12/13</span><br>Audio never recorded <span class="req">RT-17</span> · 64dp one-hand target <span class="req">RT-15</span></div>
           </div>
-          <button class="ptt" data-toast="🔊 Transmitting to group… release to end (auto-plays on others' speakers — RT-14)">HOLD<br>TO<br>TALK</button>
+          <button class="ptt" data-toast="Transmitting to group… release to end (auto-plays on others' speakers — RT-14)"><svg class="ic"><use href="#i-mic"/></svg>HOLD<br>TO TALK</button>
         </div>
       </div>
     </section>
 
     <!-- ============ 14. EXPENSES ============ -->
     <section class="screen" id="expenses">
-      <div class="topbar"><button class="back" data-go="overview">←</button><h3>Expenses — Goa Reunion</h3><span class="mini">Module 7</span></div>
+      <div class="topbar"><button class="back" data-go="overview"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Expenses — Goa Reunion</h3><span class="mini">Module 7</span></div>
       <div class="tabs">
-        <button class="on">🧾 Expenses</button><button data-toast="Balances view: per-member spent / share / net (E-04)">⚖ Balances</button>
+        <button class="on"><svg class="ic"><use href="#i-receipt"/></svg>Expenses</button><button data-toast="Balances view: per-member spent / share / net (E-04)"><svg class="ic"><use href="#i-scale"/></svg>Balances</button>
       </div>
       <div class="body">
-        <div class="box" style="background:var(--fill);">
+        <div class="box" style="background:linear-gradient(135deg,var(--accent),var(--accent-dk));color:#fff;border:none;">
           <div class="row" style="text-align:center;">
-            <div class="grow"><div class="label">Trip total</div><b style="font-size:15px;">₹18,450</b></div>
-            <div class="grow"><div class="label">Your share</div><b style="font-size:15px;">₹2,306</b></div>
-            <div class="grow"><div class="label">Net <span class="req">E-04</span></div><b style="font-size:15px;">+₹1,310</b><div class="meta">you get back</div></div>
+            <div class="grow"><div class="label" style="color:rgba(255,255,255,.8)">Trip total</div><b style="font-size:16px;">₹18,450</b></div>
+            <div class="grow" style="border-left:1px solid rgba(255,255,255,.25);border-right:1px solid rgba(255,255,255,.25);"><div class="label" style="color:rgba(255,255,255,.8)">Your share</div><b style="font-size:16px;">₹2,306</b></div>
+            <div class="grow"><div class="label" style="color:rgba(255,255,255,.8)">Net <span class="req">E-04</span></div><b style="font-size:16px;">+₹1,310</b><div class="meta" style="color:rgba(255,255,255,.85)">you get back</div></div>
           </div>
         </div>
 
         <div class="label">Recent expenses — visible to all members <span class="req">E-01 / E-06</span></div>
         <div class="box">
-          <div class="row" style="justify-content:space-between;"><b style="font-size:13px;">🏨 Beach villa — 2 nights</b><b>₹9,600</b></div>
-          <div class="meta">Paid by Arjun · 12 Dec · Stay · split equally × 8 (₹1,200 each) <span class="req">E-02</span></div>
-          <div class="meta">📎 receipt.jpg attached · only Arjun / Admin can edit <span class="req">E-06</span></div>
+          <div class="lrow" style="padding:0;"><span class="licon"><svg class="ic"><use href="#i-bed"/></svg></span><div class="grow"><div class="row" style="justify-content:space-between;"><b style="font-size:13px;">Beach villa — 2 nights</b><b>₹9,600</b></div><div class="meta">Arjun · 12 Dec · Stay · split × 8 (₹1,200 ea) <span class="req">E-02</span></div><div class="meta" style="display:flex;align-items:center;gap:4px;"><svg class="ic"><use href="#i-image"/></svg>receipt.jpg · only Arjun / Admin can edit <span class="req">E-06</span></div></div></div>
         </div>
         <div class="box">
-          <div class="row" style="justify-content:space-between;"><b style="font-size:13px;">🍜 Dinner @ beach shack</b><b>₹3,850</b></div>
-          <div class="meta">Paid by You · 12 Dec · Food · split among 6 selected (Priya & Sneha skipped) <span class="req">E-02</span></div>
+          <div class="lrow" style="padding:0;"><span class="licon coral"><svg class="ic"><use href="#i-utensils"/></svg></span><div class="grow"><div class="row" style="justify-content:space-between;"><b style="font-size:13px;">Dinner @ beach shack</b><b>₹3,850</b></div><div class="meta">You · 12 Dec · Food · split among 6 (Priya & Sneha skipped) <span class="req">E-02</span></div></div></div>
         </div>
         <div class="box">
-          <div class="row" style="justify-content:space-between;"><b style="font-size:13px;">⛽ Fuel — BLR → Goa</b><b>₹5,000</b></div>
-          <div class="meta">Paid by Rohan · 11 Dec · Fuel · custom split: car-poolers only, by seat <span class="req">E-02</span></div>
-          <div class="meta">📴 Added offline — synced when back online <span class="req">E-07</span></div>
+          <div class="lrow" style="padding:0;"><span class="licon gold"><svg class="ic"><use href="#i-fuel"/></svg></span><div class="grow"><div class="row" style="justify-content:space-between;"><b style="font-size:13px;">Fuel — BLR → Goa</b><b>₹5,000</b></div><div class="meta">Rohan · 11 Dec · Fuel · custom split: car-poolers, by seat <span class="req">E-02</span></div><div class="meta" style="display:flex;align-items:center;gap:4px;"><svg class="ic"><use href="#i-power"/></svg>Added offline — synced when back online <span class="req">E-07</span></div></div></div>
         </div>
 
         <div class="label">Settle up — fewest transactions <span class="req">E-05</span></div>
         <div class="box row">
-          <div class="avatar">PD</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#6c5ce7,#4834b8)">PD</div>
           <div class="grow" style="font-size:12px;">Priya → <b>You</b><div class="meta">₹810</div></div>
-          <button class="btn sm" data-toast="UPI deep link opened — GPay / PhonePe / Paytm (E-05)">Request via UPI</button>
-          <button class="btn sm ghost" data-toast="Marked as settled ✓ (E-04)">Settled</button>
+          <button class="btn sm" data-toast="UPI deep link opened — GPay / PhonePe / Paytm (E-05)">Request UPI</button>
+          <button class="btn sm ghost" data-toast="Marked as settled (E-04)">Settled</button>
         </div>
         <div class="box row">
-          <div class="avatar">SM</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#ff6b5e,#e8584b)">SM</div>
           <div class="grow" style="font-size:12px;">Sneha → <b>You</b><div class="meta">₹500</div></div>
-          <button class="btn sm" data-toast="UPI deep link opened — GPay / PhonePe / Paytm (E-05)">Request via UPI</button>
-          <button class="btn sm ghost" data-toast="Marked as settled ✓ (E-04)">Settled</button>
+          <button class="btn sm" data-toast="UPI deep link opened — GPay / PhonePe / Paytm (E-05)">Request UPI</button>
+          <button class="btn sm ghost" data-toast="Marked as settled (E-04)">Settled</button>
         </div>
 
         <div class="row">
-          <button class="btn grow" data-toast="New expense: amount · category · paid-by · receipt photo · split equally / selected / custom (E-01, E-02)">+ Add expense</button>
-          <button class="btn ghost grow" data-toast="Expense report exported as CSV / PDF (E-08 · P2)">⬇ Export</button>
+          <button class="btn grow" data-toast="New expense: amount · category · paid-by · receipt photo · split equally / selected / custom (E-01, E-02)"><svg class="ic"><use href="#i-plus"/></svg> Add expense</button>
+          <button class="btn ghost grow" data-toast="Expense report exported as CSV / PDF (E-08 · P2)"><svg class="ic"><use href="#i-file"/></svg> Export</button>
         </div>
         <div class="meta" style="text-align:center;">Any member can add · INR default <span class="req">E-09</span> · visible to trip members only</div>
       </div>
@@ -710,7 +818,7 @@
     <div class="toast" id="toast"></div>
     </div><!-- /viewport -->
   </div><!-- /phone -->
-  <div class="hint">Click sidebar items or tap elements inside the phone to navigate. Dark buttons & pins are interactive. Use <b>“Toggle PRD requirement tags”</b> to overlay requirement IDs (S-01, P-02, RT-12…) for traceability against the PRD.</div>
+  <div class="hint">Click sidebar items or tap elements inside the phone to navigate. Teal buttons & map pins are interactive. Use <b>“Toggle PRD requirement tags”</b> to overlay requirement IDs (S-01, P-02, RT-12…) for traceability against the PRD.</div>
 </main>
 
 <script>
@@ -783,15 +891,16 @@
   });
 
   /* ---- Survey stepper (P-02: 6 mandatory dimensions) ---- */
+  function svgic(id){ return '<svg class="ic"><use href="#i-' + id + '"/></svg> '; }
   var qs = [
     {dim:"Terrain type", req:"P-02a", text:"What kind of place are we dreaming of?", sel:"Single select",
-     opts:["⛰️ Mountain","🏖️ Beach|sel","🏜️ Desert","🛶 Backwater","🏙️ City","🌲 Forest"]},
+     opts:[svgic('mountain')+"Mountain",svgic('waves')+"Beach|sel",svgic('sun')+"Desert",svgic('globe')+"Backwater",svgic('landmark')+"City",svgic('compass')+"Forest"]},
     {dim:"Travel mode", req:"P-02b", text:"How do we get there?", sel:"Single select",
-     opts:["🚗 Road trip|sel","✈️ Flight","🚂 Train","🔀 Mixed"]},
+     opts:[svgic('car')+"Road trip|sel",svgic('plane')+"Flight",svgic('navigation')+"Train",svgic('share')+"Mixed"]},
     {dim:"Trip duration", req:"P-02c", text:"How long can everyone get away?", sel:"Single select",
      opts:["Weekend (2–3 days)","Short (4–5 days)|sel","Week-long","Extended (8+ days)"]},
     {dim:"Activity preference", req:"P-02d", text:"What do we want to do most?", sel:"Multi select",
-     opts:["🧗 Adventure","🌿 Nature|sel","🏛 Cultural","😌 Relaxation|sel","🍜 Food","👨‍👩‍👧 Family"]},
+     opts:[svgic('compass')+"Adventure",svgic('waves')+"Nature|sel",svgic('landmark')+"Cultural",svgic('heart')+"Relaxation|sel",svgic('utensils')+"Food",svgic('users')+"Family"]},
     {dim:"Budget per person", req:"P-02e", text:"What's our comfort zone on spend?", sel:"Single select",
      opts:["Budget (<₹8k)","Mid-range (₹8–15k)|sel","Comfortable (₹15–30k)","Premium (₹30k+)"]},
     {dim:"Preferred travel months", req:"P-02f", text:"When can we travel?", sel:"Multi select",
@@ -810,7 +919,7 @@
     document.getElementById('qSel').textContent = q.sel;
     document.getElementById('qStep').textContent = (qi < 6 ? 'Q' + (qi+1) + ' / 6' : 'Custom');
     document.getElementById('qBar').style.width = Math.round(((qi+1)/qs.length)*100) + '%';
-    document.getElementById('qNext').textContent = (qi === qs.length-1 ? 'Submit ✓' : 'Next →');
+    document.getElementById('qNext').innerHTML = (qi === qs.length-1 ? 'Submit ' + svgic('check') : 'Next ' + svgic('arrow-right'));
     var html = '';
     q.opts.forEach(function(o){
       var sel = o.indexOf('|sel') > -1;
@@ -838,7 +947,7 @@
       acts:["Beach hopping: Baga → Palolem","Water sports at Calangute","Old Goa heritage churches","Dudhsagar waterfall day trip","Saturday Night Market, Arpora"],
       months:"Nov–Jan", weather:"24–32°C, dry & pleasant", crowds:"HIGH (peak season)",
       events:"Sunburn (Dec), Christmas & NYE", practical:"From Bengaluru: ~10h drive / 1h flight · Nearby: Gokarna (3h) · Est. ₹9–14k pp",
-      react:[5,2,1], pills:["☀ Nov–Jan","🚗 ~10h from BLR","₹9–14k pp"] },
+      react:[5,2,1], pills:[svgic('sun')+"Nov–Jan",svgic('car')+"~10h from BLR",svgic('wallet')+"₹9–14k pp"] },
     gokarna:{ name:"Gokarna", match:81, region:"North Karnataka · Konkan coast", img:IMG.gokarna,
       matchN:"5 of 6 preferences matched",
       chips:["✓ Beach","✓ Relaxation","✓ Budget-friendly","✓ Road-trippable","✓ Oct–Mar ideal","✗ Nightlife (very quiet)"],
@@ -846,7 +955,7 @@
       acts:["Beach trek: Kudle → Paradise","Sunset at Om Beach","Kudle Beach cafés & yoga","Mahabaleshwar Temple","Half Moon / Paradise camping"],
       months:"Oct–Mar", weather:"23–31°C, breezy & dry", crowds:"LOW–MEDIUM",
       events:"Shivaratri at Mahabaleshwar (Feb–Mar)", practical:"From Bengaluru: ~9–10h drive / night bus · Nearest rail: Gokarna Road (10 km) · Est. ₹6–10k pp",
-      react:[4,3,0], pills:["☀ Oct–Mar","🚌 ~10h from BLR","₹6–10k pp"] },
+      react:[4,3,0], pills:[svgic('sun')+"Oct–Mar",svgic('car')+"~10h from BLR",svgic('wallet')+"₹6–10k pp"] },
     varkala:{ name:"Varkala", match:74, region:"South Kerala · Arabian Sea", img:IMG.varkala,
       matchN:"4 of 6 preferences matched",
       chips:["✓ Beach","✓ Relaxation","✓ Mid-range","✗ Road-trippable (best fly)","✓ Oct–Mar ideal","✓ Wellness"],
@@ -854,7 +963,7 @@
       acts:["North Cliff café walk","Sunset over Papanasam Beach","Ayurveda & yoga sessions","Janardanaswamy Temple","Kappil backwaters day trip"],
       months:"Oct–Mar", weather:"26–33°C, humid coastal", crowds:"MEDIUM",
       events:"Onam (Aug–Sep), Arattu festival", practical:"Fly to Trivandrum (49 km) · Varkala rail ~3 km from cliff · Est. ₹10–15k pp",
-      react:[3,3,1], pills:["☀ Oct–Mar","✈ Trivandrum 49 km","₹10–15k pp"] },
+      react:[3,3,1], pills:[svgic('sun')+"Oct–Mar",svgic('plane')+"Trivandrum 49 km",svgic('wallet')+"₹10–15k pp"] },
     andaman:{ name:"Andaman Islands", match:68, region:"Havelock & Neil · Bay of Bengal", img:IMG.andaman,
       matchN:"4 of 6 preferences matched",
       chips:["✓ Beach","✓ Relaxation","✗ Mid-range (premium)","✗ Road-trippable (fly-in)","✓ Oct–May ideal","✓ Adventure / diving"],
@@ -862,7 +971,7 @@
       acts:["Radhanagar Beach sunset","Scuba at Havelock dive sites","Neil Island snorkelling","Cellular Jail, Port Blair","Sea-kayaking & island ferries"],
       months:"Oct–May", weather:"25–32°C, calm seas Nov+", crowds:"MEDIUM (book early)",
       events:"Island Tourism Festival (Jan)", practical:"Flight only → Port Blair, then ferry · Discover Scuba ₹5.5–7.5k · Est. ₹25–40k pp",
-      react:[6,1,1], pills:["☀ Oct–May","✈ fly to Port Blair","₹25–40k pp"] }
+      react:[6,1,1], pills:[svgic('sun')+"Oct–May",svgic('plane')+"fly to Port Blair",svgic('wallet')+"₹25–40k pp"] }
   };
   var DEST_ORDER = ["goa","gokarna","varkala","andaman"];
   function heroBg(url){ return 'linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,.05) 100%), url("' + url + '")'; }
@@ -878,7 +987,8 @@
     document.getElementById('dMatchN').textContent = d.matchN;
     document.getElementById('dChips').innerHTML = d.chips.map(function(c){
       var ok = c.indexOf('✓') === 0;
-      return '<span class="chip' + (ok ? ' sel' : '') + '">' + c + '</span>';
+      var label = c.replace('✓','').replace('✗','').trim();
+      return '<span class="chip' + (ok ? ' sel' : '') + '">' + svgic(ok ? 'check' : 'x') + label + '</span>';
     }).join('');
     document.getElementById('dDesc').textContent = d.desc;
     document.getElementById('dActs').innerHTML = d.acts.map(function(a,i){
@@ -889,9 +999,9 @@
     document.getElementById('dCrowds').textContent = d.crowds;
     document.getElementById('dEvents').textContent = d.events;
     document.getElementById('dPractical').textContent = d.practical;
-    document.getElementById('dUp').textContent = '👍 Interested · ' + d.react[0];
-    document.getElementById('dMid').textContent = '🤔 Not sure · ' + d.react[1];
-    document.getElementById('dDown').textContent = '👎 Not int. · ' + d.react[2];
+    document.getElementById('dUp').innerHTML = svgic('heart') + 'Interested · ' + d.react[0];
+    document.getElementById('dMid').innerHTML = svgic('clock') + 'Not sure · ' + d.react[1];
+    document.getElementById('dDown').innerHTML = svgic('x') + 'Not int. · ' + d.react[2];
     var b = document.getElementById('dBody');
     b.classList.remove('fade-in'); void b.offsetWidth; b.classList.add('fade-in');
     go('destination');
@@ -904,16 +1014,22 @@
       var d = DEST[key];
       var pills = d.pills.map(function(p){ return '<span class="pill">' + p + '</span>'; }).join('');
       return '<div class="dcard" data-dest="' + key + '">' +
-        '<div class="thumb" style="background-image:url(&quot;' + d.img + '&quot;)">' +
-          '<div class="score">' + d.match + '% match</div></div>' +
+        '<div class="thumb" style="background-image:url(&quot;' + d.img + '&quot;)"><div class="scrim" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.32),transparent 55%);"></div>' +
+          '<div class="score">' + svgic('star') + d.match + '%</div></div>' +
         '<div class="info">' +
-          '<div class="row" style="justify-content:space-between;"><div class="nm">' + d.name + '</div>' +
+          '<div class="row" style="justify-content:space-between;"><div class="nm">' + svgic('pin') + d.name + '</div>' +
           '<div class="meta">' + d.region.split(' · ')[0] + '</div></div>' +
           '<div class="meta" style="margin-top:3px;">' + d.desc.split('. ')[0] + '.</div>' +
           '<div class="facts">' + pills + '</div>' +
         '</div></div>';
     }).join('');
   }
+
+  /* hero / cover imagery (free-licensed Wikimedia photos, with gradient fallback) */
+  var loginHeroEl = document.getElementById('loginHero');
+  if(loginHeroEl){ loginHeroEl.style.backgroundImage = 'url("' + IMG.varkala + '")'; }
+  var homeGoaEl = document.getElementById('homeGoa');
+  if(homeGoaEl){ homeGoaEl.style.backgroundImage = 'url("' + IMG.goa + '")'; }
 
   renderDiscovery();
   openDest('goa');
