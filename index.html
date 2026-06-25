@@ -77,6 +77,26 @@
   .fab{position:absolute; bottom:18px; right:16px; width:54px; height:54px; border-radius:50%; background:var(--ink); color:#fff; border:none; font-size:24px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.25); z-index:6;}
   .stars{letter-spacing:2px; font-size:11px;}
 
+  /* ===== hi-fi photo system (Discovery + Destination) ===== */
+  .photo{position:relative; border-radius:10px; overflow:hidden; background-size:cover; background-position:center; background-color:#c2ccd4;}
+  .photo.hero{height:188px;}
+  .photo .scrim{position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.66) 0%, rgba(0,0,0,.06) 52%, rgba(0,0,0,.18) 100%);}
+  .photo .cap{position:absolute; left:13px; right:13px; bottom:10px; color:#fff; z-index:2; text-shadow:0 1px 5px rgba(0,0,0,.55);}
+  .photo .cap .nm{font-size:21px; font-weight:800; letter-spacing:.3px;}
+  .photo .cap .sub{font-size:11px; opacity:.93;}
+  .score{background:rgba(255,255,255,.94); color:#1c6b2e; font-weight:800; font-size:11px; border-radius:13px; padding:3px 9px; white-space:nowrap;}
+  .photo .score{position:absolute; top:10px; right:10px; z-index:2;}
+  .dcard{border:1.5px solid var(--line-lt); border-radius:12px; overflow:hidden; background:#fff; cursor:pointer; box-shadow:0 2px 7px rgba(0,0,0,.07); transition:transform .12s, box-shadow .12s;}
+  .dcard:hover{transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,.13);}
+  .dcard .thumb{height:118px; background-size:cover; background-position:center; background-color:#c2ccd4; position:relative;}
+  .dcard .thumb .score{position:absolute; top:8px; right:8px;}
+  .dcard .info{padding:9px 11px 11px;}
+  .dcard .info .nm{font-size:14px; font-weight:700;}
+  .facts{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px;}
+  .pill{font-size:10px; background:var(--fill-dk); border-radius:10px; padding:3px 8px; color:#555; white-space:nowrap;}
+  .fade-in{animation:fade .35s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:none;}}
+
   /* annotation tags */
   .req{display:none; font-size:9px; background:#fff; border:1px solid #b08c00; color:#7a6200; border-radius:3px; padding:0 4px; vertical-align:middle; margin-left:4px; white-space:nowrap;}
   body.annot .req{display:inline-block;}
@@ -378,71 +398,76 @@
     <!-- ============ 9. DESTINATION MAP ============ -->
     <section class="screen" id="discover">
       <div class="topbar"><button class="back" data-go="results">←</button><h3>Destination Discovery</h3><span class="mini">Module 3</span></div>
-      <div class="map" style="flex:1; border:none; border-radius:0;">
-        <div class="grid"></div>
-        <div class="pin" style="top:34%; left:24%;" data-go="destination"><div class="dot"><b>92%</b></div><div class="tag">Goa</div></div>
-        <div class="pin" style="top:25%; left:62%;" data-go="destination"><div class="dot"><b>81%</b></div><div class="tag">Gokarna</div></div>
-        <div class="pin" style="top:55%; left:45%;" data-go="destination"><div class="dot"><b>74%</b></div><div class="tag">Varkala</div></div>
-        <div class="pin" style="top:48%; left:74%;" data-go="destination"><div class="dot"><b>68%</b></div><div class="tag">Andaman ✈</div></div>
-        <div class="pin" style="top:70%; left:28%;" data-go="destination"><div class="dot"><b>+4</b></div><div class="tag">Cluster — tap to zoom <span class="req">D-05</span></div></div>
-        <div style="position:absolute; top:10px; left:10px; right:10px;" class="row">
-          <span class="chip sel" style="background:#fff;color:var(--ink);">★ Match pins <span class="req">D-02</span></span>
-          <span class="chip" data-toast="Showing mix of well-known + off-the-beaten-track (D-04)">Well-known ⇄ Offbeat</span>
-        </div>
-      </div>
-      <div class="sheet">
-        <div class="handle"></div>
-        <div class="label">Filters — pre-filled from Group Profile <span class="req">D-03</span> <span class="meta" style="font-weight:400;text-transform:none;">(changes visible to all members)</span></div>
-        <div class="chips" style="margin:8px 0;">
+      <div class="body fade-in">
+        <div class="chips">
           <span class="chip sel">Beach</span><span class="chip sel">Relaxation</span><span class="chip sel">Mid-range</span><span class="chip">Within 800 km</span><span class="chip sel">Nov–Jan</span>
         </div>
-        <div class="row">
-          <div class="grow"><div class="label">Group shortlist (3) <span class="req">D-06</span></div><div class="meta">Goa · Gokarna · Varkala — visible to all</div></div>
-          <button class="btn sm" data-go="destination">View →</button>
+        <div class="meta">Filters pre-filled from Group Profile <span class="req">D-03</span> · changes visible to all members</div>
+
+        <div class="map" style="height:150px;">
+          <div class="grid"></div>
+          <div class="pin" style="top:44%; left:19%;" data-dest="goa"><div class="dot"><b>92%</b></div><div class="tag">Goa</div></div>
+          <div class="pin" style="top:30%; left:45%;" data-dest="gokarna"><div class="dot"><b>81%</b></div><div class="tag">Gokarna</div></div>
+          <div class="pin" style="top:66%; left:58%;" data-dest="varkala"><div class="dot"><b>74%</b></div><div class="tag">Varkala</div></div>
+          <div class="pin" style="top:46%; left:83%;" data-dest="andaman"><div class="dot"><b>68%</b></div><div class="tag">Andaman ✈</div></div>
+          <div style="position:absolute; top:8px; left:8px;" class="row">
+            <span class="chip sel" style="font-size:10px; padding:3px 8px;">★ Match pins <span class="req">D-02</span></span>
+            <span class="chip" style="font-size:10px; padding:3px 8px;" data-toast="Mix of well-known + offbeat (D-04) · tap a cluster to zoom (D-05)">Well-known ⇄ Offbeat <span class="req">D-04</span><span class="req">D-05</span></span>
+          </div>
         </div>
+
+        <div class="row" style="justify-content:space-between;">
+          <div class="label">Group shortlist — ranked by match <span class="req">D-06</span></div>
+          <span class="meta">Tap a card →</span>
+        </div>
+        <div id="discList" style="display:flex; flex-direction:column; gap:12px;"></div>
       </div>
     </section>
 
     <!-- ============ 10. DESTINATION CARD ============ -->
     <section class="screen" id="destination">
-      <div class="topbar"><button class="back" data-go="discover">←</button><h3>Goa</h3><span class="mini">92% match</span></div>
-      <div class="body">
-        <div class="img" style="height:150px;"><span>HERO GALLERY · 1/6 · swipe ◀▶ (4–8 images)</span></div>
-        <div class="row" style="justify-content:center; gap:4px;"><b>●</b><span>○ ○ ○ ○ ○</span></div>
+      <div class="topbar"><button class="back" data-go="discover">←</button><h3 id="dTitle">Goa</h3><span class="mini" id="dMatch">92% match</span></div>
+      <div class="body fade-in" id="dBody">
+        <div class="photo hero" id="dHero">
+          <div class="scrim"></div>
+          <div class="score" id="dScore">92% match</div>
+          <div class="cap"><div class="nm" id="dName">Goa</div><div class="sub" id="dRegion">Konkan coast</div></div>
+        </div>
+        <div class="row" style="justify-content:center;"><span class="meta" id="dGallery">📷 Hero gallery · 1 / 6 · swipe ◀▶ <span class="req">D-07</span></span></div>
 
         <div class="box">
           <div class="label">Match score <span class="req">D-08</span></div>
-          <b style="font-size:14px;">5 of 6 preferences matched</b>
-          <div class="chips" style="margin-top:6px;">
-            <span class="chip sel">✓ Beach</span><span class="chip sel">✓ Relaxation</span><span class="chip sel">✓ Mid-range</span><span class="chip sel">✓ Road-trippable</span><span class="chip sel">✓ Nov–Jan ideal</span><span class="chip">✗ Week-long (best 4–5 days)</span>
-          </div>
+          <b style="font-size:14px;" id="dMatchN">5 of 6 preferences matched</b>
+          <div class="chips" id="dChips" style="margin-top:6px;"></div>
         </div>
 
         <div class="box">
-          <div class="meta" style="font-size:12px; color:var(--ink);">India's beach capital — a mix of buzzing shacks in the north and quiet sands in the south. Great group stays, seafood, water sports and an easy coastal road-trip loop. (100–150 word description) <span class="req">D-07</span></div>
+          <div class="meta" id="dDesc" style="font-size:12px; color:var(--ink); line-height:1.55;"></div>
+          <div class="meta" style="margin-top:5px;"><span class="req">D-07</span></div>
         </div>
 
         <div class="box">
           <div class="label">Top 5 activities</div>
-          <div class="meta">1. Beach hopping (Baga → Palolem) · 2. Water sports · 3. Old Goa heritage walk · 4. Dudhsagar falls · 5. Saturday night market</div>
+          <div id="dActs" style="display:flex; flex-direction:column; gap:5px; margin-top:7px; font-size:12px;"></div>
         </div>
 
         <div class="box">
-          <div class="label">Your travel months: Nov–Jan <span class="req">D-07</span></div>
-          <div class="meta">☀ Weather: 24–32°C, dry & pleasant · 👥 Crowds: HIGH (peak season) · 🎉 Events: Sunburn (Dec), Christmas markets</div>
+          <div class="label">Your travel months: <span id="dMonths">Nov–Jan</span> <span class="req">D-07</span></div>
+          <div class="meta" style="margin-top:5px;">☀ <span id="dWeather"></span> · 👥 Crowds: <span id="dCrowds"></span></div>
+          <div class="meta" style="margin-top:3px;">🎉 <span id="dEvents"></span></div>
         </div>
 
         <div class="box">
           <div class="label">Practical <span class="req">D-09</span></div>
-          <div class="meta">Nearby: Gokarna (3h) · From Bengaluru: ~10h drive / 1h flight · Est. budget: ₹9–14k pp</div>
+          <div class="meta" id="dPractical" style="margin-top:5px;"></div>
         </div>
 
         <div class="box">
           <div class="label">Group reactions <span class="req">D-10</span></div>
           <div class="row" style="margin-top:6px;">
-            <span class="chip" data-toast="You reacted: Interested 👍">👍 Interested · 5</span>
-            <span class="chip" data-toast="You reacted: Not sure 🤔">🤔 Not sure · 2</span>
-            <span class="chip" data-toast="You reacted: Not interested 👎">👎 Not int. · 1</span>
+            <span class="chip" id="dUp" data-toast="You reacted: Interested 👍">👍 Interested · 5</span>
+            <span class="chip" id="dMid" data-toast="You reacted: Not sure 🤔">🤔 Not sure · 2</span>
+            <span class="chip" id="dDown" data-toast="You reacted: Not interested 👎">👎 Not int. · 1</span>
           </div>
         </div>
 
@@ -728,6 +753,8 @@
   document.addEventListener('click', function(e){
     var nav = e.target.closest('[data-nav]');
     if(nav){ go(nav.getAttribute('data-nav')); return; }
+    var dEl = e.target.closest('[data-dest]');
+    if(dEl){ openDest(dEl.getAttribute('data-dest')); return; }
     var tEl = e.target.closest('[data-toast]');
     var gEl = e.target.closest('[data-go]');
     if(tEl){ toast(tEl.getAttribute('data-toast')); }
@@ -796,6 +823,100 @@
     opts.setAttribute(q.sel.indexOf('Multi') === 0 ? 'data-multi' : 'data-single','');
   }
 
+  /* ---- Module 3 destination data (real places · free-licensed Wikimedia photos) ---- */
+  var IMG = {
+    goa:"https://commons.wikimedia.org/wiki/Special:FilePath/Vagator%20Beach,%20Goa,%20India.jpg?width=640",
+    gokarna:"https://commons.wikimedia.org/wiki/Special:FilePath/Om%20beach%20Gokarna.JPG?width=640",
+    varkala:"https://commons.wikimedia.org/wiki/Special:FilePath/Cliffs%20of%20Varkala.jpg?width=640",
+    andaman:"https://commons.wikimedia.org/wiki/Special:FilePath/Radhanagar%20Beach,%20Havelock%20Island,%20Andaman,%20India.jpg?width=640"
+  };
+  var DEST = {
+    goa:{ name:"Goa", match:92, region:"North & South Goa · Konkan coast", img:IMG.goa,
+      matchN:"5 of 6 preferences matched",
+      chips:["✓ Beach","✓ Relaxation","✓ Mid-range","✓ Road-trippable","✓ Nov–Jan ideal","✗ Week-long (best 4–5 days)"],
+      desc:"Goa pairs the buzz of the north — Baga and Vagator shacks, water sports and after-dark clubs — with the calm of the south's wide, quiet sands. Add UNESCO-listed Old Goa churches, a Dudhsagar waterfall day trip and easy seafood everywhere, and it's an effortless group escape.",
+      acts:["Beach hopping: Baga → Palolem","Water sports at Calangute","Old Goa heritage churches","Dudhsagar waterfall day trip","Saturday Night Market, Arpora"],
+      months:"Nov–Jan", weather:"24–32°C, dry & pleasant", crowds:"HIGH (peak season)",
+      events:"Sunburn (Dec), Christmas & NYE", practical:"From Bengaluru: ~10h drive / 1h flight · Nearby: Gokarna (3h) · Est. ₹9–14k pp",
+      react:[5,2,1], pills:["☀ Nov–Jan","🚗 ~10h from BLR","₹9–14k pp"] },
+    gokarna:{ name:"Gokarna", match:81, region:"North Karnataka · Konkan coast", img:IMG.gokarna,
+      matchN:"5 of 6 preferences matched",
+      chips:["✓ Beach","✓ Relaxation","✓ Budget-friendly","✓ Road-trippable","✓ Oct–Mar ideal","✗ Nightlife (very quiet)"],
+      desc:"Gokarna is Goa's laid-back cousin: a pilgrim town fringed by five beaches — Kudle, Om, Half Moon and Paradise — linked by an easy 5–6 hour coastal trek. Expect cliff cafés, calm swims and far smaller crowds, with the Mahabaleshwar temple anchoring the old town.",
+      acts:["Beach trek: Kudle → Paradise","Sunset at Om Beach","Kudle Beach cafés & yoga","Mahabaleshwar Temple","Half Moon / Paradise camping"],
+      months:"Oct–Mar", weather:"23–31°C, breezy & dry", crowds:"LOW–MEDIUM",
+      events:"Shivaratri at Mahabaleshwar (Feb–Mar)", practical:"From Bengaluru: ~9–10h drive / night bus · Nearest rail: Gokarna Road (10 km) · Est. ₹6–10k pp",
+      react:[4,3,0], pills:["☀ Oct–Mar","🚌 ~10h from BLR","₹6–10k pp"] },
+    varkala:{ name:"Varkala", match:74, region:"South Kerala · Arabian Sea", img:IMG.varkala,
+      matchN:"4 of 6 preferences matched",
+      chips:["✓ Beach","✓ Relaxation","✓ Mid-range","✗ Road-trippable (best fly)","✓ Oct–Mar ideal","✓ Wellness"],
+      desc:"Varkala is the only spot in southern Kerala where cliffs meet the sea. A red laterite bluff lined with North Cliff cafés looks down on Papanasam ('wash away sins') beach and its freshwater spring. It leans slow and wellness — ayurveda, yoga and sunsets — with a quiet, untouched south cliff.",
+      acts:["North Cliff café walk","Sunset over Papanasam Beach","Ayurveda & yoga sessions","Janardanaswamy Temple","Kappil backwaters day trip"],
+      months:"Oct–Mar", weather:"26–33°C, humid coastal", crowds:"MEDIUM",
+      events:"Onam (Aug–Sep), Arattu festival", practical:"Fly to Trivandrum (49 km) · Varkala rail ~3 km from cliff · Est. ₹10–15k pp",
+      react:[3,3,1], pills:["☀ Oct–Mar","✈ Trivandrum 49 km","₹10–15k pp"] },
+    andaman:{ name:"Andaman Islands", match:68, region:"Havelock & Neil · Bay of Bengal", img:IMG.andaman,
+      matchN:"4 of 6 preferences matched",
+      chips:["✓ Beach","✓ Relaxation","✗ Mid-range (premium)","✗ Road-trippable (fly-in)","✓ Oct–May ideal","✓ Adventure / diving"],
+      desc:"The Andamans are the splurge pick: Havelock's Radhanagar — rated among Asia's best beaches — plus calm Neil Island and some of India's finest scuba at Dixon's Pinnacle and Johnny's Gorge. Flights to Port Blair then ferries between islands make it a fly-in trip, best with 5+ days.",
+      acts:["Radhanagar Beach sunset","Scuba at Havelock dive sites","Neil Island snorkelling","Cellular Jail, Port Blair","Sea-kayaking & island ferries"],
+      months:"Oct–May", weather:"25–32°C, calm seas Nov+", crowds:"MEDIUM (book early)",
+      events:"Island Tourism Festival (Jan)", practical:"Flight only → Port Blair, then ferry · Discover Scuba ₹5.5–7.5k · Est. ₹25–40k pp",
+      react:[6,1,1], pills:["☀ Oct–May","✈ fly to Port Blair","₹25–40k pp"] }
+  };
+  var DEST_ORDER = ["goa","gokarna","varkala","andaman"];
+  function heroBg(url){ return 'linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,.05) 100%), url("' + url + '")'; }
+
+  function openDest(key){
+    var d = DEST[key]; if(!d){ return; }
+    document.getElementById('dTitle').textContent = d.name;
+    document.getElementById('dMatch').textContent = d.match + '% match';
+    document.getElementById('dScore').textContent = d.match + '% match';
+    document.getElementById('dName').textContent = d.name;
+    document.getElementById('dRegion').textContent = d.region;
+    document.getElementById('dHero').style.backgroundImage = heroBg(d.img);
+    document.getElementById('dMatchN').textContent = d.matchN;
+    document.getElementById('dChips').innerHTML = d.chips.map(function(c){
+      var ok = c.indexOf('✓') === 0;
+      return '<span class="chip' + (ok ? ' sel' : '') + '">' + c + '</span>';
+    }).join('');
+    document.getElementById('dDesc').textContent = d.desc;
+    document.getElementById('dActs').innerHTML = d.acts.map(function(a,i){
+      return '<div>' + (i+1) + '. ' + a + '</div>';
+    }).join('');
+    document.getElementById('dMonths').textContent = d.months;
+    document.getElementById('dWeather').textContent = d.weather;
+    document.getElementById('dCrowds').textContent = d.crowds;
+    document.getElementById('dEvents').textContent = d.events;
+    document.getElementById('dPractical').textContent = d.practical;
+    document.getElementById('dUp').textContent = '👍 Interested · ' + d.react[0];
+    document.getElementById('dMid').textContent = '🤔 Not sure · ' + d.react[1];
+    document.getElementById('dDown').textContent = '👎 Not int. · ' + d.react[2];
+    var b = document.getElementById('dBody');
+    b.classList.remove('fade-in'); void b.offsetWidth; b.classList.add('fade-in');
+    go('destination');
+  }
+
+  function renderDiscovery(){
+    var list = document.getElementById('discList');
+    if(!list){ return; }
+    list.innerHTML = DEST_ORDER.map(function(key){
+      var d = DEST[key];
+      var pills = d.pills.map(function(p){ return '<span class="pill">' + p + '</span>'; }).join('');
+      return '<div class="dcard" data-dest="' + key + '">' +
+        '<div class="thumb" style="background-image:url(&quot;' + d.img + '&quot;)">' +
+          '<div class="score">' + d.match + '% match</div></div>' +
+        '<div class="info">' +
+          '<div class="row" style="justify-content:space-between;"><div class="nm">' + d.name + '</div>' +
+          '<div class="meta">' + d.region.split(' · ')[0] + '</div></div>' +
+          '<div class="meta" style="margin-top:3px;">' + d.desc.split('. ')[0] + '.</div>' +
+          '<div class="facts">' + pills + '</div>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  renderDiscovery();
+  openDest('goa');
   go('login');
 </script>
 </body>
