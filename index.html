@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trippie — Clickable Wireframe Prototype v1.1</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <style>
   :root{
     --ink:#16202e; --muted:#69788c; --line:#e2e7ef; --line-lt:#eef1f6; --bg:#e9edf3;
@@ -716,9 +718,7 @@
       <div class="topbar"><button class="back" data-go="home"><svg class="ic"><use href="#i-arrow-left"/></svg></button><h3>Live Map — Manali Convoy</h3><span class="mini" data-toast="Location consent per session · pause anytime · data deleted 7 days post-trip (RT-01/RT-08)" style="cursor:pointer;background:#ffeae7;color:var(--coral);display:flex;align-items:center;gap:4px;"><svg class="ic"><use href="#i-radio"/></svg>SHARING</span></div>
 
       <div class="map" style="flex:1; border:none; border-radius:0;">
-        <div class="grid"></div>
-        <div class="road" style="top:30%; transform:rotate(8deg);"></div>
-        <div class="road" style="top:62%; transform:rotate(-14deg);"></div>
+        <div id="leafMap" style="position:absolute; inset:0; z-index:1;"></div>
 
         <!-- navigation banner -->
         <div style="position:absolute; top:10px; left:10px; right:10px; z-index:4;" class="box row">
@@ -848,6 +848,27 @@
     });
     document.getElementById('stageTitle').textContent = titles[id] || 'Trippie';
     document.getElementById('vp').scrollTop = 0;
+    if(id === 'livemap'){ initLiveMap(); }
+  }
+
+  /* real OpenStreetMap base for the Live Map (Manali convoy route) */
+  var liveMap;
+  function initLiveMap(){
+    if(typeof L === 'undefined') return;            // CDN unavailable → green fallback + pins
+    var host = document.getElementById('leafMap');
+    if(!host) return;
+    if(!liveMap){
+      liveMap = L.map(host, {
+        center: [32.270, 77.175], zoom: 12,
+        zoomControl:false, attributionControl:true,
+        dragging:false, scrollWheelZoom:false, doubleClickZoom:false,
+        boxZoom:false, keyboard:false, touchZoom:false, tap:false
+      });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18, attribution: '© OpenStreetMap'
+      }).addTo(liveMap);
+    }
+    setTimeout(function(){ liveMap.invalidateSize(); }, 60);
   }
 
   var toastTimer;
